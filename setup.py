@@ -2,10 +2,10 @@ from setuptools import setup
 
 with open("requirements.txt", encoding="utf-8") as r:
     requires = [i.strip() for i in r]
-
+ 
 setup(
     name="school_mosreg_api",
-    version="0.1.0",
+    version="0.1.1",
     description="SchoolMosregAPI by DSOP",
     url="https://github.com/Den4ikSuperOstryyPer4ik/SchoolMosregRuAPI",
     download_url="https://github.com/Den4ikSuperOstryyPer4ik/SchoolMosregRuAPI/releases/latest",
