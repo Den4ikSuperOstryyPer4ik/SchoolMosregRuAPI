@@ -6,14 +6,19 @@ from .. import types
 class SchoolMosregRUAPI(BaseAPI):
     """Основной sync класс почти со всеми функциями API.\n~~~"""
     
-    def __init__(self, login: str = None, password: str = None, token: str = None) -> None:
+    def __init__(self, login: str = None, password: str = None, token: str = None, get_info: bool = False) -> None:
         super().__init__(login, password, token)
 
-        try:
-            self.me_context = self.get_context()
-            self.me_user = self.get_user()
-            self.me_person = self.get_person()
-        except:
+        if get_info:
+            try:
+                self.me_context = self.get_context()
+                self.me_user = self.get_user()
+                self.me_person = self.get_person()
+            except:
+                self.me_context = None
+                self.me_user = None
+                self.me_person = None
+        else:
             self.me_context = None
             self.me_user = None
             self.me_person = None
