@@ -1,7 +1,8 @@
+from datetime import date, datetime
 import requests
 
 from pydantic import BaseModel
-from school_mosreg_api.exceptions import raise_error, all_error_types_str, all_error_types_str_, APIError, all_error_types_str__dict
+from ..exceptions import raise_error, all_error_types_str, all_error_types_str_, APIError, all_error_types_str__dict
 
 
 class BaseAPI:
@@ -27,6 +28,16 @@ class BaseAPI:
                 raise ValueError("Token and password is None. Please add to arguments ``login=LOGIN, password=PASSWORD`` or ``token=TOKEN``")
             else:
                 self.token = self.get_token()
+    
+    @staticmethod
+    def datetime_to_string(time: datetime | date = datetime.now()) -> str:
+        """Сконвертировать datetime.datetime объект в строку(``str``) для использования в URL (METHOD)\n~~~"""
+        return f"{time.year}-{time.month}-{time.day}T{time.hour}:{time.minute}:{time.second}" if isinstance(time, datetime) else f"{time.year}-{time.month}-{time.day}"
+    
+    @staticmethod
+    def date_to_string(date: date = date.today()) -> str:
+        """Сконвертировать datetime.date объект в строку(``str``) для использования в URL (METHOD)\n~~~"""
+        return f"{date.year}-{date.month}-{date.day}"
     
     @staticmethod
     def get_headers(token: str):
@@ -60,7 +71,7 @@ class BaseAPI:
                 raise APIError(resp.url, resp.status_code, "Что-то не так...")
 
         if resp.status_code != 200:
-            raise APIError(resp.url, resp.status,
+            raise APIError(resp.url, resp.status_code,
                 "Сайт лежит или ведутся технические работы, использование api временно невозможно"
             )
         
@@ -79,7 +90,7 @@ class BaseAPI:
         if response.headers.get("Content-Type") == "text/html":
             error_html = response.content.decode()
             if "502" in error_html:
-                raise_error(url=response.url, status_code=response.status, error_type="HTMLError", description=error_html)
+                raise_error(url=response.url, status_code=response.status_code, error_type="HTMLError", description=error_html)
             
             error_text = " ".join(
                 word
@@ -88,13 +99,13 @@ class BaseAPI:
                 .strip()[:-4]
                 .split()
             )
-            raise_error(url=response.url, status_code=response.status, error_type="HTMLError", description=error_text)
+            raise_error(url=response.url, status_code=response.status_code, error_type="HTMLError", description=error_text)
         
         json_response = response.json()
 
         if isinstance(json_response, dict):
             if json_response.get("type") in all_error_types_str or json_response.get("type") in all_error_types_str_ or json_response.get("type") in all_error_types_str__dict.keys():
-                raise_error(url=response.url, status_code=response.status, error_type=json_response.get("type"), description=json_response.get("description", None))
+                raise_error(url=response.url, status_code=response.status_code, error_type=json_response.get("type"), description=json_response.get("description", None))
     
     
     def get(self, method: str, headers: dict = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
