@@ -1,8 +1,9 @@
+from datetime import date, datetime
 import aiohttp, asyncio
 
 from pydantic import BaseModel
 
-from school_mosreg_api.exceptions import raise_error, all_error_types_str, all_error_types_str_, APIError, all_error_types_str__dict
+from ..exceptions import raise_error, all_error_types_str, all_error_types_str_, APIError, all_error_types_str__dict
 
 
 class AsyncBaseAPI:
@@ -15,7 +16,6 @@ class AsyncBaseAPI:
         self.login = login
         self.password = password
         self.token = token
-        self.session = aiohttp.ClientSession()
         
         self.API = "https://api.school.mosreg.ru/v2.0/"
         
@@ -27,10 +27,18 @@ class AsyncBaseAPI:
             elif self.password is None:
                 raise ValueError("Token and password is None. Please add to arguments ``login=LOGIN, password=PASSWORD`` or ``token=TOKEN``")
             else:
-                self.token = asyncio.get_event_loop().run_until_complete(
-                    self.get_token()
-                )
+                self.token = asyncio.get_event_loop().run_until_complete(self.get_token())
     
+    @staticmethod
+    def datetime_to_string(time: datetime | date = datetime.now()) -> str:
+        """Сконвертировать datetime.datetime объект в строку(``str``) для использования в URL (METHOD)\n~~~"""
+        return f"{time.year}-{time.month}-{time.day}T{time.hour}:{time.minute}:{time.second}" if isinstance(time, datetime) else f"{time.year}-{time.month}-{time.day}"
+    
+    @staticmethod
+    def date_to_string(date: date = date.today()) -> str:
+        """Сконвертировать datetime.date объект в строку(``str``) для использования в URL (METHOD)\n~~~"""
+        return f"{date.year}-{date.month}-{date.day}"
+
     @staticmethod
     def get_headers(token: str):
         return {"Access-token": token}
@@ -51,10 +59,10 @@ class AsyncBaseAPI:
             "login": self.login, "password": self.password
         }
         URL = "https://login.school.mosreg.ru/login/"
-        async with self.session:
-            async with self.session.post(URL, headers=self.UserAgentDict, params=params, allow_redirects=True) as resp:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(URL, headers=self.UserAgentDict, params=params, allow_redirects=True) as resp:
                 if resp.real_url.query.get("result") != "success":
-                    resp = await self.session.post(params["ReturnUrl"])
+                    resp = await session.post(params["ReturnUrl"])
                     
                     if resp.real_url.query.get("result") != "success":
                         raise APIError(params["ReturnUrl"], resp.status, "Что-то не так...")
@@ -96,7 +104,7 @@ class AsyncBaseAPI:
                 raise_error(url=response.url, status_code=response.status, error_type=json_response.get("type"), description=json_response.get("description", None))
     
     async def get(self, method: str, headers: dict = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
-        async with self.session as session:
+        async with aiohttp.ClientSession() as session:
             headers = headers or self.headers
             if headers.get("User-Agent", None) is None:
                 headers.update({"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"})
@@ -117,7 +125,7 @@ class AsyncBaseAPI:
                     return model.parse_raw((RAW_TEXT))
     
     async def post(self, method: str, headers: dict = None, json = None, data = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
-        async with self.session as session:
+        async with aiohttp.ClientSession() as session:
             headers = headers or self.headers
             if headers.get("User-Agent", None) is None:
                 headers.update({"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"})
@@ -138,7 +146,7 @@ class AsyncBaseAPI:
                     return model.parse_raw((RAW_TEXT))
 
     async def put(self, method: str, headers: dict = None, json = None, data = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
-        async with self.session as session:
+        async with aiohttp.ClientSession() as session:
             headers = headers or self.headers
             if headers.get("User-Agent", None) is None:
                 headers.update({"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"})
@@ -159,7 +167,7 @@ class AsyncBaseAPI:
                     return model.parse_raw((RAW_TEXT))
     
     async def delete(self, method: str, headers: dict = None, json = None, data = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
-        async with self.session as session:
+        async with aiohttp.ClientSession() as session:
             headers = headers or self.headers
             if headers.get("User-Agent", None) is None:
                 headers.update({"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"})
