@@ -1,5 +1,4 @@
-from . import asyncapi, api, types, exceptions
-
+from . import api, types, exceptions, asyncapi
 
 METHODS = {
     "Authorities": [
@@ -19,14 +18,5 @@ METHODS = {
         "/v2.0/users/me/context",
         "/v2.0/users/{userId}/context"],
     "CriteriaJournalMarks": [""],
-    "": [""], # TODO: дополнить все с https://api.school.mosreg.ru/partners/swagger/ui/index#/
+    "": [""], # TODO: дополнить всё с https://api.school.mosreg.ru/partners/swagger/ui/index#/
 }
-__version__ = "1.0.0"
-
-__all__ = [
-    "asyncapi",
-    "api",
-    "types",
-    "exceptions",
-    "METHODS", "__version__"
-]
