@@ -7,18 +7,22 @@ from .. import types
 class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
     """Основной Async класс почти со всеми функциями API.\n~~~"""
     
-    def __init__(self, login: str = None, password: str = None, token: str = None) -> None:
+    def __init__(self, login: str = None, password: str = None, token: str = None, get_info: bool = False) -> None:
         super().__init__(login, password, token)
 
-        try:
-            self.me_context = asyncio.get_event_loop().run_until_complete(self.get_context())
-            self.me_user = asyncio.get_event_loop().run_until_complete(self.get_user())
-            self.me_person = asyncio.get_event_loop().run_until_complete(self.get_person())
-        except:
+        if get_info:
+            try:
+                self.me_context = asyncio.get_event_loop().run_until_complete(self.get_context())
+                self.me_user = asyncio.get_event_loop().run_until_complete(self.get_user())
+                self.me_person = asyncio.get_event_loop().run_until_complete(self.get_person())
+            except:
+                self.me_context = None
+                self.me_user = None
+                self.me_person = None
+        else:
             self.me_context = None
             self.me_user = None
             self.me_person = None
-    
     
     async def check_person(self, value):
         if value == "me":
