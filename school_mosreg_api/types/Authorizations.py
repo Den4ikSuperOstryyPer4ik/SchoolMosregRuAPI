@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from .model import Type
 
-class TokenWithCode(BaseModel):
+class TokenWithCode(Type):
     """[POST] /v2.0/authorizations \n~~~\nОбменять код доступа на токен\n~~~"""
     
     accessToken: str
