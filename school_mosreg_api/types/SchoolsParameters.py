@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from .model import Type
 
-class HobbyGroup(BaseModel):
+class HobbyGroup(Type):
     schoolId: int
     schoolId_str: str
     hobbyGroupName: str
@@ -10,7 +10,7 @@ class HobbyGroup(BaseModel):
     hobbyGroupEnrollment: str
 
 
-class LearningResult(BaseModel):
+class LearningResult(Type):
     schoolId: int
     schoolId_str: str
     studyYear: int
@@ -30,7 +30,7 @@ class LearningResult(BaseModel):
     rankedInTheTop100: bool = None
 
 
-class SchoolParameters(BaseModel):
+class SchoolParameters(Type):
     """[GET] /v2.0/schools/{school}/parameters\n~~~\nПараметры общеобразовательных организаций\n~~~"""
     
     schoolId: int
