@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from .model import Type
 
 
 from .Works import Work
@@ -6,7 +6,7 @@ from .Subjects import Subject
 from .Users import User
 import datetime
 
-class LESSON(BaseModel):
+class LESSON(Type):
     id: int
     id_str: str = None
     title: str = None
@@ -20,7 +20,7 @@ class LESSON(BaseModel):
     teachers: list[int] = []
     teachers_str: list[str] = []
 
-class Lesson(BaseModel):
+class Lesson(Type):
     id: int
     title: str = None
     date: datetime.datetime = None
@@ -36,7 +36,7 @@ class Lesson(BaseModel):
     teachers: list[int] = []
     teachers_str: list[str] = []
 
-class HomeWorkFile(BaseModel):
+class HomeWorkFile(Type):
     id: int
     id_str: str
     name: str = None
@@ -50,7 +50,7 @@ class HomeWorkFile(BaseModel):
     uploadedDate: datetime.datetime = None
     storageType: str = None
 
-class Teacher(BaseModel):
+class Teacher(Type):
     id: int
     id_str: str
     userId: int
@@ -61,7 +61,7 @@ class Teacher(BaseModel):
     shortName: str = None
     sex: str = None
 
-class HomeWork(BaseModel):
+class HomeWork(Type):
     """[GET] /v2.0/users/me/school/{school}/homeworks\n~~~\n/v2.0/users/me/school/homeworks\n~~~\n/v2.0/persons/{person}/school/{school}/homeworks\n~~~\nДомашние задания\n~~~\nПрава доступа: EducationalInfo\n~~~"""
     
     works: list[Work] = []
