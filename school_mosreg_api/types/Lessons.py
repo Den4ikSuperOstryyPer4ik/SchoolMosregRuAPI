@@ -1,11 +1,11 @@
 from datetime import datetime
-from pydantic import BaseModel
+from .model import Type
 
 from .Subjects import Subject
 from .Works import Work
 
 
-class Lesson(BaseModel):
+class Lesson(Type):
     """Урок"""
     
     id: int
