@@ -1,11 +1,11 @@
-from pydantic import BaseModel
+from .model import Type
 
 from .Marks import Mark
 from .Works import Work
 from .Subjects import Subject
 
 
-class FinalMarkWorkType(BaseModel):
+class FinalMarkWorkType(Type):
     id: int
     schoolId: int
     abbreviation: str
@@ -16,7 +16,7 @@ class FinalMarkWorkType(BaseModel):
     kind: str
     
 
-class EduGroupFinalMark(BaseModel):
+class EduGroupFinalMark(Type):
     """[GET] /v2.0/edu-groups/{group}/final-marks\n~~~\nИтоговые Оценки персоны в учебной группе\n~~~"""
     
     marks: list[Mark]
