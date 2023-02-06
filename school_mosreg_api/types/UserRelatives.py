@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from .model import Type
 
 
-class UserRelatives_person(BaseModel):
+class UserRelatives_person(Type):
     id: int
     id_str: str
     userId: int
@@ -13,7 +13,7 @@ class UserRelatives_person(BaseModel):
     sex: str
 
 
-class UserRelatives(BaseModel):
+class UserRelatives(Type):
     """[GET]\n~~~\n/v2.0/users/{user}/relatives\n~~~\n/v2.0/users/me/relatives\n~~~\n/v2.0/users/me/childrenrelatives\n~~~\nПолучение всех родственных связей (детей) произвольного пользователя.\n~~~"""
     
     type: str = None
