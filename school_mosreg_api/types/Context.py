@@ -1,9 +1,8 @@
-from pydantic import BaseModel
+from .model import Type
 
 from .EduGroups import EduGroup
 
-
-class Context_Children(BaseModel):
+class Context_Children(Type):
     personId: int
     firstName: str
     lastName: str
@@ -13,14 +12,14 @@ class Context_Children(BaseModel):
     groupIds: list[int]
 
 
-class Context_school(BaseModel):
+class Context_school(Type):
     id: int
     name: str
     type: str
     groupIds: list[int]
  
 
-class Context(BaseModel):
+class Context(Type):
     """[GET] /v2.0/users/me/context | /v2.0/users/{userID}/context\n~~~\nПолучение контекстной информации по пользователю\n~~~\nПрава доступа: CommonInfo, FriendsAndRelatives, EducationalInfo\n~~~\n"""
     
     userId: int
