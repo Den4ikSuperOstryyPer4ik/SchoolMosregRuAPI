@@ -1,7 +1,7 @@
 from datetime import datetime
-from pydantic import BaseModel
+from .model import Type
 
-class _Student(BaseModel):
+class _Student(Type):
     """[GET] /v2.0/teacher/{teacher}/students\n~~~\nСписок учеников для учителя который ведет уроки у этих учеников(они должны быть в расписании) от недели назад и на 30 дней вперед (Данный класс - 1 ученик)\n~~~"""
     
     id: int
@@ -15,13 +15,13 @@ class _Student(BaseModel):
     sex: str
 
 
-class TeacherStudent(BaseModel):
+class TeacherStudent(Type):
     id: int
     id_str: str
     students: list[_Student]
 
 
-class SchoolTeacher(BaseModel):
+class SchoolTeacher(Type):
     """[GET] /v2.0/schools/{school}/teachers\n~~~\nСписок преподавателей в выбранной образовательной организации (Данный класс - 1 учитель)\n~~~"""
     
     Id: int
@@ -52,7 +52,7 @@ class SchoolTeacher(BaseModel):
     ExternalPartTime: bool
 
 
-class EduGroupTeacher(BaseModel):
+class EduGroupTeacher(Type):
     """[GET] /v2.0/edu-groups/{group}/teachers\n~~~\nСписок учителей, которые ведут уроки в данной группе, учитываются уроки от недели назад и на 30 дней вперед (Данный класс - 1 учитель)\n~~~"""
     
     id: int
