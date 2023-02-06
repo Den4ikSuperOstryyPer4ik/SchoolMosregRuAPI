@@ -1,7 +1,7 @@
 from datetime import date, datetime
 import requests
 
-from pydantic import BaseModel
+from ..types.model import Type
 from ..exceptions import raise_error, all_error_types_str, all_error_types_str_, APIError, all_error_types_str__dict
 
 
@@ -78,8 +78,8 @@ class BaseAPI:
         return resp.url.replace("https://login.school.mosreg.ru/oauth2/Authorization/Result?response_type=token&client_id=bafe713c-96a3-42b1-94d0-40392cadf82b&scope=EducationalInfo,CommonInfo,FriendsAndRelatives,SocialInfo,ContactInfo&is_granted=False&result=success#access_token=", "").replace("&state=", "")
     
     
-    def ParseListModels(self, model: BaseModel, text: str) -> list[BaseModel]:
-        class ListModels(BaseModel):
+    def ParseListModels(self, model: Type, text: str) -> list[Type]:
+        class ListModels(Type):
             listik: list[model]
         
         return ListModels.parse_raw('{"listik": '+ text.replace("'", '"') + '}').listik
@@ -108,7 +108,7 @@ class BaseAPI:
                 raise_error(url=response.url, status_code=response.status_code, error_type=json_response.get("type"), description=json_response.get("description", None))
     
     
-    def get(self, method: str, headers: dict = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
+    def get(self, method: str, headers: dict = None, model: Type | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
         headers = headers or self.headers
         if headers.get("User-Agent", None) is None:
             headers.update({"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"})
@@ -127,7 +127,7 @@ class BaseAPI:
         else:
             return model.parse_raw((RAW_TEXT))
     
-    def post(self, method: str, headers: dict = None, json = None, data = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
+    def post(self, method: str, headers: dict = None, json = None, data = None, model: Type | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
         headers = headers or self.headers
         if headers.get("User-Agent", None) is None:
             headers.update({"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"})
@@ -146,7 +146,7 @@ class BaseAPI:
         else:
             return model.parse_raw((RAW_TEXT))
 
-    def put(self, method: str, headers: dict = None, json = None, data = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
+    def put(self, method: str, headers: dict = None, json = None, data = None, model: Type | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
         headers = headers or self.headers
         if headers.get("User-Agent", None) is None:
             headers.update({"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"})
@@ -165,7 +165,7 @@ class BaseAPI:
         else:
             return model.parse_raw((RAW_TEXT))
     
-    def delete(self, method: str, headers: dict = None, json = None, data = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
+    def delete(self, method: str, headers: dict = None, json = None, data = None, model: Type | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
         headers = headers or self.headers
         if headers.get("User-Agent", None) is None:
             headers.update({"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:108.0) Gecko/20100101 Firefox/108.0"})
