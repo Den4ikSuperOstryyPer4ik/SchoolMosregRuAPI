@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from .model import Type
 
 
-class SchoolMemberships_school_school(BaseModel):
+class SchoolMemberships_school_school(Type):
     fullName: str
     avatarSmall: str
     city: str
@@ -19,7 +19,7 @@ class SchoolMemberships_school_school(BaseModel):
     tsoRegionTreePath: str
 
 
-class SchoolMemberships_school_subject(BaseModel):
+class SchoolMemberships_school_subject(Type):
     id: int
     id_str: str
     name: str
@@ -27,7 +27,7 @@ class SchoolMemberships_school_subject(BaseModel):
     fgosSubjectId: int
 
 
-class SchoolMemberships_school_eduGroupMemberships_(BaseModel):
+class SchoolMemberships_school_eduGroupMemberships_(Type):
     id: int
     id_str: str
     parentIds: list[int]
@@ -45,11 +45,11 @@ class SchoolMemberships_school_eduGroupMemberships_(BaseModel):
     journaltype: str
         
 
-class SchoolMemberships_school_eduGroupMemberships(BaseModel):
+class SchoolMemberships_school_eduGroupMemberships(Type):
     eduGroup: SchoolMemberships_school_eduGroupMemberships_
 
 
-class SchoolMemberships_school(BaseModel):
+class SchoolMemberships_school(Type):
     school: SchoolMemberships_school_school
     roles: list[str]
     editorRoles: list[str]
@@ -58,7 +58,7 @@ class SchoolMemberships_school(BaseModel):
     subjects: list[SchoolMemberships_school_subject]
 
 
-class SchoolMemberships(BaseModel):
+class SchoolMemberships(Type):
     """[GET]\n~~~\n/v2.0/users/{user}/school-memberships\n~~~\n/v2.0/users/{user}/education\n~~~\n/v2.0/users/me/school-memberships\n~~~\n/v2.0/persons/{person}/school-memberships\n~~~\nСписок участий в школах для того или иного пользователя\n~~~\nПрава доступа: EducationalInfo\n~~~\n"""
     
     person: int | None = None
