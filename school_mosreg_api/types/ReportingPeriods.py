@@ -1,7 +1,7 @@
 from datetime import datetime
-from pydantic import BaseModel
+from .model import Type
 
-class ReportingPeriod(BaseModel):
+class ReportingPeriod(Type):
     """[GET] /v2.0/edu-groups/{eduGroup}/reporting-periods\n~~~\nСписок отчётных периодов для класса или учебной группы (Данный класс - 1 отчетный период)\n~~~"""
     
     id: int
@@ -14,7 +14,7 @@ class ReportingPeriod(BaseModel):
     year: int
 
 
-class Holidays(BaseModel):
+class Holidays(Type):
     id: int
     reportingPeriodGroupId: int
     dateStart: datetime
@@ -23,7 +23,7 @@ class Holidays(BaseModel):
     description: str
 
 
-class ReportingPeriodEduGroup(BaseModel):
+class ReportingPeriodEduGroup(Type):
     """[GET] /v2.0/edu-groups/{eduGroup}/reporting-periods-group\n~~~\nГруппа отчетных периодов для класса или учебной группы (Данный класс - 1 отчетный период)\n~~~"""
     
     id: int
