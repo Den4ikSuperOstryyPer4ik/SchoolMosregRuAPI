@@ -1,8 +1,8 @@
 from datetime import datetime
-from pydantic import BaseModel
+from .model import Type
 
 
-class Task(BaseModel):
+class Task(Type):
     """[GET] /v2.0/tasks/{task}\n~~~\n/v2.0/tasks\n~~~\n/v2.0/lessons/{lesson}/tasks\n~~~\n/v2.0/works/{work}/tasks\n~~~\n/v2.0/persons/{person}/tasks\n~~~\n/v2.0/tasks/{personId}/undone\n~~~\nДомашнее задание (Данный класс - 1 ДЗ)\n~~~\nПрава доступа: EducationalInfo\n~~~"""
     
     id: int
