@@ -1,15 +1,16 @@
-from pydantic import BaseModel
+from .model import Type
+
 from datetime import datetime
 from .Works import Work
 
 
-class ImportantWork(BaseModel):
+class ImportantWork(Type):
     work: Work
     subjectName: str
     workTypeName: str
 
 
-class Mark_(BaseModel):
+class Mark_(Type):
     id: int
     id_str: str
     type: str
@@ -28,20 +29,20 @@ class Mark_(BaseModel):
     use_avg_calc: bool
 
 
-class MarksList(BaseModel):
+class MarksList(Type):
     marks: list[Mark_]
     
 
-class Mark(BaseModel):
+class Mark(Type):
     mark: Mark_
 
 
-class Lesson(BaseModel):
+class Lesson(Type):
     id: int
     date: datetime
 
 
-class MarksCard(BaseModel):
+class MarksCard(Type):
     marks: list[Mark]
     lesson: Lesson
     isImportant: bool
@@ -50,25 +51,25 @@ class MarksCard(BaseModel):
     workTypeName: str
 
 
-class Summary(BaseModel):
+class Summary(Type):
     importantWorks: list[ImportantWork] = []
     marksCards: list[MarksCard] = []
     dayEmotion: str
     feedMode: str
 
 
-class NextDayHomeworks(BaseModel):
+class NextDayHomeworks(Type):
     work: Work
     subjectName: str
     workTypeName: str
 
 
-class ImportantWorkType(BaseModel):
+class ImportantWorkType(Type):
     id: int
     name: str
 
 
-class NextDaySchedule(BaseModel):
+class NextDaySchedule(Type):
     lessonId: int
     lessonStatus: str
     number: int
@@ -76,13 +77,13 @@ class NextDaySchedule(BaseModel):
     importantWorkTypes: list[ImportantWorkType]
 
 
-class TodayHomework(BaseModel):
+class TodayHomework(Type):
     work: Work
     subjectName: str
     workTypeName: str
 
 
-class TodaySchedule(BaseModel):
+class TodaySchedule(Type):
     lessonId: int
     lessonStatus: str
     number: int
@@ -90,7 +91,7 @@ class TodaySchedule(BaseModel):
     importantWorkTypes: list[ImportantWorkType]
 
 
-class LessonLogEntry(BaseModel):
+class LessonLogEntry(Type):
     person: int
     lesson: int
     person_str: str
@@ -100,13 +101,13 @@ class LessonLogEntry(BaseModel):
     createdDate: datetime
 
 
-class LogEntries(BaseModel):
+class LogEntries(Type):
     lessonLogEntry: LessonLogEntry
     subjectName: str
     lessonTitle: str
 
 
-class FeedDay(BaseModel):
+class FeedDay(Type):
     """..."""
     date: datetime
     nextWorkingDayDate: datetime | None = None
@@ -119,7 +120,7 @@ class FeedDay(BaseModel):
 
 
 
-class UserFeed(BaseModel):
+class UserFeed(Type):
     """[GET] /v2.0/users/me/feed\n~~~\nЛента пользователя\n~~~\nПрава доступа: EducationalInfo\n~~~"""
     
     days: list[FeedDay] | None = None
