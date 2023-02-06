@@ -1,8 +1,7 @@
 from datetime import datetime
-from pydantic import BaseModel
+from .model import Type
 
-
-class Mark(BaseModel):
+class Mark(Type):
     """Оценка"""
     
     
