@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from .model import Type
 from .Subjects import Subject
 
-class EduGroup(BaseModel):
+class EduGroup(Type):
     """[GET]\n~~~\n/v2.0/edu-groups/{eduGroup}\n~~~\n/v2.0/edu-groups\n~~~\n/v2.0/schools/{school}/edu-groups\n~~~\n/v2.0/persons/{person}/edu-groups\n~~~\n/v2.0/persons/{person}/edu-groups/all\n~~~\n/v2.0/persons/{person}/schools/{school}/edu-groups\n~~~\n/v2.0/edu-groups/{groupId}/parallel\n~~~\nКласс или учебная группа\n~~~"""
     
     id: int
