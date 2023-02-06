@@ -1,7 +1,6 @@
-from pydantic import BaseModel
+from .model import Type
 
-
-class Children(BaseModel):
+class Children(Type):
     """[GET] /v2.0/user/{userID}/children \n~~~\nПолучение списка детей по идентификатору родительского пользователя\n~~~\nПрава доступа: EducationalInfo\n~~~\n"""
     
     id: int
