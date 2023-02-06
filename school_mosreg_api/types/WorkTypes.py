@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from .model import Type
 
-class WorkType(BaseModel):
+class WorkType(Type):
     """[GET] /v2.0/work-types/{school}\n~~~\nПолучение списка всех типов работ школы (Данный класс - 1 тип работы)\n~~~\nПрава доступа: EducationalInfo\n~~~"""
     
     id: int
