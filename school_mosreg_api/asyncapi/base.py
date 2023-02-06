@@ -1,7 +1,7 @@
 from datetime import date, datetime
 import aiohttp, asyncio
 
-from pydantic import BaseModel
+from ..types.model import Type
 
 from ..exceptions import raise_error, all_error_types_str, all_error_types_str_, APIError, all_error_types_str__dict
 
@@ -27,7 +27,10 @@ class AsyncBaseAPI:
             elif self.password is None:
                 raise ValueError("Token and password is None. Please add to arguments ``login=LOGIN, password=PASSWORD`` or ``token=TOKEN``")
             else:
-                self.token = asyncio.get_event_loop().run_until_complete(self.get_token())
+                try:
+                    self.token = asyncio.get_event_loop().run_until_complete(self.get_token())
+                except:
+                    self.token = None
     
     @staticmethod
     def datetime_to_string(time: datetime | date = datetime.now()) -> str:
@@ -75,8 +78,8 @@ class AsyncBaseAPI:
                 return resp.real_url.fragment.replace("access_token=", "").replace("&state=", "")
     
     
-    def ParseListModels(self, model: BaseModel, text: str) -> list[BaseModel]:
-        class ListModels(BaseModel):
+    def ParseListModels(self, model: Type, text: str) -> list[Type]:
+        class ListModels(Type):
             listik: list[model]
         
         return ListModels.parse_raw('{"listik": '+ text.replace("'", '"') + '}').listik
@@ -103,7 +106,7 @@ class AsyncBaseAPI:
             if json_response.get("type") in all_error_types_str or json_response.get("type") in all_error_types_str_ or json_response.get("type") in all_error_types_str__dict.keys():
                 raise_error(url=response.url, status_code=response.status, error_type=json_response.get("type"), description=json_response.get("description", None))
     
-    async def get(self, method: str, headers: dict = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
+    async def get(self, method: str, headers: dict = None, model: Type | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
         async with aiohttp.ClientSession() as session:
             headers = headers or self.headers
             if headers.get("User-Agent", None) is None:
@@ -124,7 +127,7 @@ class AsyncBaseAPI:
                 else:
                     return model.parse_raw((RAW_TEXT))
     
-    async def post(self, method: str, headers: dict = None, json = None, data = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
+    async def post(self, method: str, headers: dict = None, json = None, data = None, model: Type | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
         async with aiohttp.ClientSession() as session:
             headers = headers or self.headers
             if headers.get("User-Agent", None) is None:
@@ -145,7 +148,7 @@ class AsyncBaseAPI:
                 else:
                     return model.parse_raw((RAW_TEXT))
 
-    async def put(self, method: str, headers: dict = None, json = None, data = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
+    async def put(self, method: str, headers: dict = None, json = None, data = None, model: Type | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
         async with aiohttp.ClientSession() as session:
             headers = headers or self.headers
             if headers.get("User-Agent", None) is None:
@@ -166,7 +169,7 @@ class AsyncBaseAPI:
                 else:
                     return model.parse_raw((RAW_TEXT))
     
-    async def delete(self, method: str, headers: dict = None, json = None, data = None, model: BaseModel | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
+    async def delete(self, method: str, headers: dict = None, json = None, data = None, model: Type | None = None, is_list: bool = False, return_json: bool = False, return_raw_text: bool = False, **kwargs):
         async with aiohttp.ClientSession() as session:
             headers = headers or self.headers
             if headers.get("User-Agent", None) is None:
