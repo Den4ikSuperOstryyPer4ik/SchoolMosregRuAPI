@@ -1,8 +1,8 @@
 from datetime import datetime
-from pydantic import BaseModel
+from .model import Type
 
 
-class ITEM(BaseModel):
+class ITEM(Type):
     Id: int
     Start: datetime
     Finish: datetime
@@ -12,7 +12,7 @@ class ITEM(BaseModel):
     LessonNumber: int
 
 
-class TimeTable(BaseModel):
+class TimeTable(Type):
     """[GET] /v2.0/schools/{school}/timetables\n~~~\n/v2.0/edu-groups/{eduGroup}/timetables\n~~~\nПолучение расписания школы/учебной группы\n~~~\nПрава доступа: EducationalInfo\n~~~"""
     
     Name: str
