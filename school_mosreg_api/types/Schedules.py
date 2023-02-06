@@ -1,11 +1,11 @@
 from datetime import datetime
-from pydantic import BaseModel
+from .model import Type
 
 from .Works import Work
 from .Subjects import Subject
 
 
-class ScheduleDayLesson(BaseModel):
+class ScheduleDayLesson(Type):
     id: int
     title: str
     date: datetime
@@ -21,7 +21,7 @@ class ScheduleDayLesson(BaseModel):
     teachers: list[int]
 
 
-class ScheduleDayMark(BaseModel):
+class ScheduleDayMark(Type):
     id: int
     id_str: str
     type: str
@@ -40,7 +40,7 @@ class ScheduleDayMark(BaseModel):
     use_avg_calc: bool
 
 
-class ScheduleDayWorkType(BaseModel):
+class ScheduleDayWorkType(Type):
     id: int
     schoolId: int
     abbreviation: str
@@ -51,7 +51,7 @@ class ScheduleDayWorkType(BaseModel):
     kind: str
 
 
-class ScheduleDayTeacherPerson(BaseModel):
+class ScheduleDayTeacherPerson(Type):
     id: int
     id_str: str
     userId: int
@@ -63,12 +63,12 @@ class ScheduleDayTeacherPerson(BaseModel):
     sex: str
 
 
-class ScheduleDayTeacher(BaseModel):
+class ScheduleDayTeacher(Type):
     person: ScheduleDayTeacherPerson
     role: str
 
 
-class ScheduleDayLessonLogEntries(BaseModel):
+class ScheduleDayLessonLogEntries(Type):
     person: int
     lesson: int
     person_str: str
@@ -78,7 +78,7 @@ class ScheduleDayLessonLogEntries(BaseModel):
     createdDate: datetime
 
 
-class ScheduleDay(BaseModel):
+class ScheduleDay(Type):
     date: datetime
     lessons: list[ScheduleDayLesson]
     marks: list[ScheduleDayMark]
@@ -91,7 +91,7 @@ class ScheduleDay(BaseModel):
     nextDate: datetime
 
 
-class Schedule(BaseModel):
+class Schedule(Type):
     """[GET] /v2.0/persons/{person}/groups/{group}/schedules\n~~~\nРасписание ученика\n~~~\nПрава доступа: EducationalInfo\n~~~"""
     
     days: list[ScheduleDay]
