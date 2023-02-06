@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from .model import Type
 
 
-class School(BaseModel):
+class School(Type):
     """[GET] /v2.0/schools/{school}\n~~~\nПрофиль школы\n~~~"""
     
     fullName: str = None
@@ -20,7 +20,7 @@ class School(BaseModel):
     tsoCityId: int = None
     tsoRegionTreePath: str = None
 
-class PersonSchool(BaseModel):
+class PersonSchool(Type):
     """[GET] /v2.0/schools/person-schools\n~~~\nСписок образовательных организаций пользователя\n~~~"""
     
     id: int
@@ -30,7 +30,7 @@ class PersonSchool(BaseModel):
     tsoCityId: int
     tsoRegionTreePath: str
 
-class SchoolsCities(BaseModel):
+class SchoolsCities(Type):
     """[GET] /v2.0/schools/cities\n~~~\nСписок населенных пунктов, образовательные организации которых включены в Систему\n~~~"""
     
     id: int
