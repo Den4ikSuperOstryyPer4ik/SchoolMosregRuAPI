@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from .model import Type
 
-class Organization(BaseModel):
+class Organization(Type):
     """[GET] /v2.0/users/me/organizations/{organizationId}\n~~~\nДанные указанной организации пользователя\n~~~\nПрава доступа: EducationalInfo\n~~~\n"""
     
     OrganizationId: int
