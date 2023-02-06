@@ -1,7 +1,6 @@
-from pydantic import BaseModel
+from .model import Type
 
-
-class Person(BaseModel):
+class Person(Type):
     """Персона."""
     
     id: int
