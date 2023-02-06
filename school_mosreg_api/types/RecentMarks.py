@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from .model import Type
 from datetime import datetime
 
 from .LessonLog import LessonLogEntries
@@ -8,7 +8,7 @@ from .Works import Work
 from .Marks import Mark
 
 
-class criteriabasedmark(BaseModel):
+class criteriabasedmark(Type):
     id: int
     id_str: str = None
     personid: int = None
@@ -17,7 +17,7 @@ class criteriabasedmark(BaseModel):
     date: datetime = None
 
 
-class WORKTYPE(BaseModel):
+class WORKTYPE(Type):
     id: int
     schoolId: int = None
     abbreviation: str = None
@@ -28,7 +28,7 @@ class WORKTYPE(BaseModel):
     kind: str = None
 
 
-class RecentMarks(BaseModel):
+class RecentMarks(Type):
     """[GET] /v2.0/persons/{person}/group/{group}/recentmarks\n~~~\nПоследние оценки/отметки посещаемости персоны по предмету указанному в параметре subject начиная с даты определенном в параметре fromDate и с ограничением на выводимое количество указанном в параметре limit\n~~~"""
     
     marks: list[Mark] = []
