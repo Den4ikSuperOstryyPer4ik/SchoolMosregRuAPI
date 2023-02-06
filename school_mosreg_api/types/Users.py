@@ -1,7 +1,8 @@
-from pydantic import BaseModel
+from .model import Type
+
 from datetime import datetime
 
-class User(BaseModel):
+class User(Type):
     """[GET/POST]\n~~~\n/v2.0/users/{user}\n~~~\n/v2.0/users/me\n~~~\n/v2.0/users/\n~~~\n/v2.0/users/many\n~~~\nПрофиль пользователя (Данный класс - 1 пользователь)\n~~~"""
     
     id: int
