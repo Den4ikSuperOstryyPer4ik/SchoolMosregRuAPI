@@ -1,42 +1,24 @@
 from datetime import date, datetime
-from typing import Any
+from typing import Any, Optional
 from .base import BaseAPI
 from .. import types
 
 class SchoolMosregRUAPI(BaseAPI):
     """Основной sync класс почти со всеми функциями API.\n~~~"""
-    
-    def __init__(self, login: str = None, password: str = None, token: str = None, get_info: bool = False) -> None:
-        super().__init__(login, password, token)
 
-        if get_info:
-            try:
-                self.me_context = self.get_context()
-                self.me_user = self.get_user()
-                self.me_person = self.get_person()
-            except:
-                self.me_context = None
-                self.me_user = None
-                self.me_person = None
-        else:
-            self.me_context = None
-            self.me_user = None
-            self.me_person = None
-    
-    
     def check_person(self, value):
         if value == "me":
-            return (self.me_context).personId if self.me_context else (self.get_user()).personId
+            return (self.get_user()).personId
         else:
             return value
         
     def check_user(self, value):
         if value == "me":
-            return (self.me_user).id if self.me_user else (self.get_user()).id
+            return (self.get_user()).id
         else:
             return value
     
-    def get_me_organizations(self) -> list[int] | None:
+    def get_me_organizations(self) -> Optional[list[int]]:
         """[GET] users/me/organizations
         
         Список идентификаторов организаций текущего пользователя
@@ -95,7 +77,7 @@ class SchoolMosregRUAPI(BaseAPI):
             "grant_type": grant_type,
             "refreshToken": refreshToken})
         
-    def get_person_avg_marks(self, person: int | str, period) -> str | None:
+    def get_person_avg_marks(self, person: int | str, period) -> Optional[str]:
         """[GET] persons/{person}/reporting-periods/{period}/avg-mark
         
         Оценка персоны за отчетный период
@@ -111,7 +93,7 @@ class SchoolMosregRUAPI(BaseAPI):
         
         return self.get(f"persons/{self.check_person(person)}/reporting-periods/{period}/avg-mark", return_json=True)
     
-    def get_person_avg_marks_by_subject(self, person: int | str, period, subject) -> str | None:
+    def get_person_avg_marks_by_subject(self, person: int | str, period, subject) -> Optional[str]:
         """[GET] persons/{person}/reporting-periods/{period}/subjects/{subject}/avg-mark
         
         Оценка персоны по предмету за отчетный период
@@ -128,7 +110,7 @@ class SchoolMosregRUAPI(BaseAPI):
         
         return self.get(f"persons/{self.check_person(person)}/reporting-periods/{period}/subjects/{subject}/avg-mark", return_json=True)
     
-    def get_eduGroup_avg_marks_to_date(self, group: int | str, period: int | str, date: datetime | date) -> list[dict[str, Any]] | None:
+    def get_eduGroup_avg_marks_to_date(self, group: int | str, period: int | str, date: datetime | date) -> Optional[list[dict[str, Any]]]:
         """[GET] edu-groups/{group}/reporting-periods/{period}/avg-marks/{date}
         
         Оценки учебной группы по предмету за отчетный период до определенной даты
@@ -145,7 +127,7 @@ class SchoolMosregRUAPI(BaseAPI):
         
         return self.get(f"edu-groups/{group}/reporting-periods/{period}/avg-marks/{self.datetime_to_string(date)}", return_json=True)
     
-    def get_eduGroup_avg_marks(self, group: int | str, from_: datetime | date, to: datetime | date) -> list[dict[str, Any]] | None:
+    def get_eduGroup_avg_marks(self, group: int | str, from_: datetime | date, to: datetime | date) -> Optional[list[dict[str, Any]]]:
         """[GET] edu-groups/{group}/avg-marks/{from}/{to}
         
         Оценки учебной группы за период
@@ -162,7 +144,7 @@ class SchoolMosregRUAPI(BaseAPI):
         
         return self.get(f"edu-groups/{group}/avg-marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", return_json=True)
     
-    def get_user_childrens(self, userID: str | int = "me") -> list[types.Children] | None:
+    def get_user_childrens(self, userID: str | int = "me") -> Optional[list[types.Children]]:
         """[GET] user/{userID}/children
         
         Получение списка детей по идентификатору родительского пользователя
@@ -766,7 +748,7 @@ class SchoolMosregRUAPI(BaseAPI):
         
         return self.get(f"persons/{self.check_person(person)}/marks/{date}", model=types.Mark, is_list=True)
     
-    def get_marks_values(self) -> dict[str, list[str, None]]:
+    def get_marks_values(self) -> dict[str, list[str | None]]:
         """[GET] marks/values
         
         Метод возвращает все поддерживаемые системы (типы) оценок и все возможные оценки в каждой из систем.\n
@@ -998,12 +980,7 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Schools/Schools_GetPersonSchools
         """
         
-        return self.get(
-            "schools/person-schools".format(
-                f"?excludeOrganizations={'true' if excludeOrganizations is True else 'false' if excludeOrganizations is False else ''}" if (
-                    not isinstance(excludeOrganizations, str)
-                    and excludeOrganizations in [True, False]) else ""
-            ), model=types.School, is_list=True)
+        return self.get("schools/person-schools" + ("" if excludeOrganizations == "" else "?excludeOrganizations={}".format('true' if excludeOrganizations else 'false')), model=types.School, is_list=True)
 
     def get_person_schedules(self, person: int | str, group: int | str, startDate: datetime | date, endDate: datetime | date) -> types.Schedule:
         """[GET] persons/{person}/groups/{group}/schedules
@@ -1086,11 +1063,11 @@ class SchoolMosregRUAPI(BaseAPI):
  
     def search_person(
         self,
-        lastName: str = None,
-        firstName: str = None,
-        middleName: str = None,
-        snils: str = None,
-        birthday: date = None,
+        lastName: Optional[str] = None,
+        firstName: Optional[str] = None,
+        middleName: Optional[str] = None,
+        snils: Optional[str] = None,
+        birthday: Optional[date] = None,
     ) -> None | list[types.Person]:
         """[GET] person/search
         

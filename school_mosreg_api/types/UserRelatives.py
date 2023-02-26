@@ -16,6 +16,6 @@ class UserRelatives_person(Type):
 class UserRelatives(Type):
     """[GET]\n~~~\n/v2.0/users/{user}/relatives\n~~~\n/v2.0/users/me/relatives\n~~~\n/v2.0/users/me/childrenrelatives\n~~~\nПолучение всех родственных связей (детей) произвольного пользователя.\n~~~"""
     
-    type: str = None
+    type: str | None = None
     person: UserRelatives_person
-    relatives: "list[UserRelatives]" = None
+    relatives: "list[UserRelatives]" | None = None

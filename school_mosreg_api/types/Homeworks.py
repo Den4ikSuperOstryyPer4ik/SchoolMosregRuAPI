@@ -8,30 +8,30 @@ import datetime
 
 class LESSON(Type):
     id: int
-    id_str: str = None
-    title: str = None
-    date: datetime.datetime = None
-    number: int | str |  None = None
-    subject: Subject = None
-    group: int = None
-    status: str = None
-    resultPlaceId: int = None
+    id_str: str | None = None
+    title: str | None = None
+    date: datetime.datetime | None = None
+    number: int | str |  None | None = None
+    subject: Subject | None = None
+    group: int | None = None
+    status: str | None = None
+    resultPlaceId: int | None = None
     works: list[Work] = []
     teachers: list[int] = []
     teachers_str: list[str] = []
 
 class Lesson(Type):
     id: int
-    title: str = None
-    date: datetime.datetime = None
-    number: int = None
+    title: str | None = None
+    date: datetime.datetime | None = None
+    number: int | None = None
     subjectId: int
-    status: str = None
-    resultPlaceId: int = None
-    building: str = None
-    place: str = None
-    floor: str = None
-    hours: str = None
+    status: str | None = None
+    resultPlaceId: int | None = None
+    building: str | None = None
+    place: str | None = None
+    floor: str | None = None
+    hours: str | None = None
     works: list[int] = []
     teachers: list[int] = []
     teachers_str: list[str] = []
@@ -39,27 +39,27 @@ class Lesson(Type):
 class HomeWorkFile(Type):
     id: int
     id_str: str
-    name: str = None
-    typeGroup: str = None
+    name: str | None = None
+    typeGroup: str | None = None
     type: str
-    pageUrl: str = None
+    pageUrl: str | None = None
     downloadUrl: str
     user: User
-    size: int = None
-    vote: int = None
-    uploadedDate: datetime.datetime = None
-    storageType: str = None
+    size: int | None = None
+    vote: int | None = None
+    uploadedDate: datetime.datetime | None = None
+    storageType: str | None = None
 
 class Teacher(Type):
     id: int
     id_str: str
     userId: int
     userId_str: str
-    firstName: str = None
-    lastName: str = None
-    middleName: str = None
-    shortName: str = None
-    sex: str = None
+    firstName: str | None = None
+    lastName: str | None = None
+    middleName: str | None = None
+    shortName: str | None = None
+    sex: str | None = None
 
 class HomeWork(Type):
     """[GET] /v2.0/users/me/school/{school}/homeworks\n~~~\n/v2.0/users/me/school/homeworks\n~~~\n/v2.0/persons/{person}/school/{school}/homeworks\n~~~\nДомашние задания\n~~~\nПрава доступа: EducationalInfo\n~~~"""

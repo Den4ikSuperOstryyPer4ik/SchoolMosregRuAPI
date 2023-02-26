@@ -6,7 +6,7 @@ class HobbyGroup(Type):
     hobbyGroupName: str
     hobbyGroupDescription: str
     hobbyGroupSchedule: str
-    hobbyGroupPayment: str = None
+    hobbyGroupPayment: str | None | None = None
     hobbyGroupEnrollment: str
 
 
@@ -14,20 +14,20 @@ class LearningResult(Type):
     schoolId: int
     schoolId_str: str
     studyYear: int
-    prizesAtAllRussiaOlympiadPercentage: int = None
-    basicCertificatesReceivedPercentage: int = None
-    certificatesReceivedPercentage: int = None
-    egeMathBaseLevelAverageScore: int = None
-    egeMathProfileLevelAverageScore: int = None
-    egeRussianAverageScore: int = None
-    giaMathPassedPercentage: int = None
-    giaMathPassedPerfectlyPercentage: int = None
-    giaRussianPassedPercentage: int = None
-    giaRussianPassedPerfectlyPercentage: int = None
-    medalistsCount: int = None
-    medalistsPercentage: int = None
-    enrolledPercentage: int = None
-    rankedInTheTop100: bool = None
+    prizesAtAllRussiaOlympiadPercentage: int | None = None
+    basicCertificatesReceivedPercentage: int | None = None
+    certificatesReceivedPercentage: int | None = None
+    egeMathBaseLevelAverageScore: int | None = None
+    egeMathProfileLevelAverageScore: int | None = None
+    egeRussianAverageScore: int | None = None
+    giaMathPassedPercentage: int | None = None
+    giaMathPassedPerfectlyPercentage: int | None = None
+    giaRussianPassedPercentage: int | None = None
+    giaRussianPassedPerfectlyPercentage: int | None = None
+    medalistsCount: int | None = None
+    medalistsPercentage: int | None = None
+    enrolledPercentage: int | None = None
+    rankedInTheTop100: bool | None = None
 
 
 class SchoolParameters(Type):
@@ -76,52 +76,52 @@ class SchoolParameters(Type):
     generalEducationalProgrammsLicense: str
     furtherEducationalProgramsLicense: str
     primarySchoolEducationalPrograms: list[str]
-    hasAdaptedEducationalPrograms: bool = None
-    hasOwnEducationalPrograms: bool = None
+    hasAdaptedEducationalPrograms: bool | None = None
+    hasOwnEducationalPrograms: bool | None = None
     ownEducationalPrograms: str
-    hasDistEduTech: bool = None
+    hasDistEduTech: bool | None = None
     teachingForeignLanguages: list[str]
     studyPlan: str
-    actualOccupancy: int = None
-    designCapacity: int = None
-    enrollmentIsOpen: bool = None
-    vacantPlacesCount: int = None
-    disabledChildrenCount: int = None
-    firstStageGroupsCount: int = None
-    secondStageGroupsCount: int = None
-    thirdStageGroupsCount: int = None
-    firstStageStudentsCount: int = None
-    secondStageStudentsCount: int = None
-    thirdStageStudentsCount: int = None
-    teachersCount: int = None
-    teachersWithHigherEducationCount: int = None
-    highestCategoryTeachersCount: int = None
+    actualOccupancy: int | None = None
+    designCapacity: int | None = None
+    enrollmentIsOpen: bool | None = None
+    vacantPlacesCount: int | None = None
+    disabledChildrenCount: int | None = None
+    firstStageGroupsCount: int | None = None
+    secondStageGroupsCount: int | None = None
+    thirdStageGroupsCount: int | None = None
+    firstStageStudentsCount: int | None = None
+    secondStageStudentsCount: int | None = None
+    thirdStageStudentsCount: int | None = None
+    teachersCount: int | None = None
+    teachersWithHigherEducationCount: int | None = None
+    highestCategoryTeachersCount: int | None = None
     publications: str
     laureatesOfContestsCount: str
     laureatesOfContestsInfo: str
-    hasEducationalPsychologists: bool = None
-    hasDefectologists: bool = None
-    hasSpeechTherapists: bool = None
-    hasSocialWorkers: bool = None
-    hasMedicalWorkers: bool = None
-    studentsPerComputer: int = None
-    hasCompensatingClasses: bool = None
-    hasBarrierFreeEnvironment: bool = None
-    hasSwimmingPool: bool = None
-    hasMedicalOffice: bool = None
-    hasDiningRoom: bool = None
-    hasGym: bool = None
-    gymCount: int = None
-    hasAssemblyHall: bool = None
-    hasWinterGarden: bool = None
-    hasCctv: bool = None
-    hasGpd: bool = None
-    schoolSiteArea: int = None
-    hasEstheticZone: bool = None
-    trainingExperimentalPlotArea: int = None
-    hasSportArea: bool = None
-    hasRecreationArea: bool = None
-    hasZonesForTrainingInPreventionOfChildRoadTrafficInjuries: bool = None
-    hasAreasOfEconomicPurpose: bool = None
+    hasEducationalPsychologists: bool | None = None
+    hasDefectologists: bool | None = None
+    hasSpeechTherapists: bool | None = None
+    hasSocialWorkers: bool | None = None
+    hasMedicalWorkers: bool | None = None
+    studentsPerComputer: int | None = None
+    hasCompensatingClasses: bool | None = None
+    hasBarrierFreeEnvironment: bool | None = None
+    hasSwimmingPool: bool | None = None
+    hasMedicalOffice: bool | None = None
+    hasDiningRoom: bool | None = None
+    hasGym: bool | None = None
+    gymCount: int | None = None
+    hasAssemblyHall: bool | None = None
+    hasWinterGarden: bool | None = None
+    hasCctv: bool | None = None
+    hasGpd: bool | None = None
+    schoolSiteArea: int | None = None
+    hasEstheticZone: bool | None = None
+    trainingExperimentalPlotArea: int | None = None
+    hasSportArea: bool | None = None
+    hasRecreationArea: bool | None = None
+    hasZonesForTrainingInPreventionOfChildRoadTrafficInjuries: bool | None = None
+    hasAreasOfEconomicPurpose: bool | None = None
     hobbyGroups: list[HobbyGroup]
     learningResults: list[LearningResult]

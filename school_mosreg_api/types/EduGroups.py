@@ -10,12 +10,12 @@ class EduGroup(Type):
     parentIds_str: list[str] = []
     type: str
     name: str
-    fullName: str = None
-    parallel: int = None
-    timetable: int = None
-    timetable_str: str = None
-    status: str = None
-    studyyear: int = None
-    educationType: str = None
+    fullName: str | None = None
+    parallel: int | None = None
+    timetable: int | None = None
+    timetable_str: str | None = None
+    status: str | None = None
+    studyyear: int | None = None
+    educationType: str | None = None
     subjects: list[Subject] | None = []
-    journaltype: str = None
+    journaltype: str | None = None

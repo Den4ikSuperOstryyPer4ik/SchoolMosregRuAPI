@@ -8,11 +8,11 @@ class _Student(Type):
     id_str: str
     userId: int
     userId_str: str
-    firstName: str
-    lastName: str
-    middleName: str
-    shortName: str
-    sex: str
+    firstName: str | None = None
+    lastName: str | None = None
+    middleName: str | None = None
+    shortName: str | None = None
+    sex: str | None = None
 
 
 class TeacherStudent(Type):
@@ -59,9 +59,9 @@ class EduGroupTeacher(Type):
     id_str: str
     userId: int
     userId_str: str
-    firstName: str
-    lastName: str
-    middleName: str
-    shortName: str
-    sex: str
+    firstName: str | None = None
+    lastName: str | None = None
+    middleName: str | None = None
+    shortName: str | None = None
+    sex: str | None = None
 

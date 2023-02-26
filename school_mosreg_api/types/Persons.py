@@ -7,8 +7,8 @@ class Person(Type):
     id_str: str
     userId: int
     userId_str: str
-    firstName: str
-    lastName: str
-    middleName: str
-    shortName: str
+    firstName: str | None = None
+    lastName: str | None = None
+    middleName: str | None = None
+    shortName: str | None = None
     sex: str

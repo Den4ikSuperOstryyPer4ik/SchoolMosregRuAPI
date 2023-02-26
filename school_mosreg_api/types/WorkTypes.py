@@ -5,9 +5,9 @@ class WorkType(Type):
     
     id: int
     id_str: str
-    schoolId: int = None
-    kindId: int = None
-    kind: str = None
+    schoolId: int | None = None
+    kindId: int | None = None
+    kind: str | None = None
     title: str
-    abbr: str = None
+    abbr: str | None = None
     weight: int = 0

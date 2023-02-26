@@ -2,7 +2,7 @@ class APIError(Exception):
     """Обработка всех типов ошибок"""
     NAME = "APIError"
 
-    def __init__(self, url: str, status_code: int, description: str = None) -> None:
+    def __init__(self, url: str, status_code: int, description: str | None = None) -> None:
         error_text = f"API-Error | {status_code}:{self.NAME}:\nURL: {url}"
         
         if description:
@@ -155,6 +155,7 @@ all_error_types_str__dict = {
     'requestLimit': "ApiRequestLimit",
     'serverError': "ApiServerError",
     'httpsRequired': "ApiHttpsRequired",
+    "unknownError": "UnknownError",
 }
 
 all_error_types = {
@@ -172,8 +173,9 @@ all_error_types = {
     "AuthorizationNotOwner": AuthorizationNotOwner,
     "AuthorizationOwnerForbidden": AuthorizationOwnerForbidden,
     "AuthorizationSystemForbidden": AuthorizationSystemForbidden,
+    "UnknownError": APIError 
 }
 
 
-def raise_error(url: str, status_code: int, error_type: str, description: str = None):
+def raise_error(url: str, status_code: int, error_type: str, description: str | None = None):
     raise all_error_types[all_error_types_str__dict[error_type]](url, status_code, description)

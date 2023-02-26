@@ -9,21 +9,21 @@ class User(Type):
     id_str: str
     personId: int
     personId_str: str
-    name: str = None
-    email: str = None
-    login: str = None
-    fullName: str = None
-    fullNameInverse: str = None
-    firstName: str = None
-    middleName: str = None
-    lastName: str = None
-    shortName: str = None
-    locale: str = None
-    timezone: str = None
-    sex: str = None
-    photoSmall: str = None
-    photoMedium: str = None
-    photoLarge: str = None
-    birthday: datetime = None
+    name: str | None = None
+    email: str | None = None
+    login: str | None = None
+    fullName: str | None = None
+    fullNameInverse: str | None = None
+    firstName: str | None = None
+    middleName: str | None = None
+    lastName: str | None = None
+    shortName: str | None = None
+    locale: str | None = None
+    timezone: str | None = None
+    sex: str | None = None
+    photoSmall: str | None = None
+    photoMedium: str | None = None
+    photoLarge: str | None = None
+    birthday: datetime | None = None
     roles: list[str] = []
-    phone: str = None
+    phone: str | None = None

@@ -10,22 +10,22 @@ from .Marks import Mark
 
 class criteriabasedmark(Type):
     id: int
-    id_str: str = None
-    personid: int = None
-    section: int = None
-    value: int = None
-    date: datetime = None
+    id_str: str | None = None
+    personid: int | None = None
+    section: int | None = None
+    value: int | None = None
+    date: datetime | None = None
 
 
 class WORKTYPE(Type):
     id: int
-    schoolId: int = None
-    abbreviation: str = None
-    name: str = None
-    isFinal: bool = None
-    isImportant: bool = None
-    kindId: int = None
-    kind: str = None
+    schoolId: int | None = None
+    abbreviation: str | None = None
+    name: str | None = None
+    isFinal: bool | None = None
+    isImportant: bool | None = None
+    kindId: int | None = None
+    kind: str | None = None
 
 
 class RecentMarks(Type):

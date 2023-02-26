@@ -9,7 +9,7 @@ class Work_Task(Type):
     person_str: str
     work: int
     work_str: str
-    status: str = None
+    status: str | None = None
     targetDate: datetime
 
 
@@ -35,7 +35,7 @@ class Work(Type):
     subjectId: int
     isImportant: bool
     targetDate: datetime
-    sentDate: datetime = None
+    sentDate: datetime | None = None
     createdBy: int
     files: list[int] | None = []
     oneDriveLinks: list[int] | None = []
