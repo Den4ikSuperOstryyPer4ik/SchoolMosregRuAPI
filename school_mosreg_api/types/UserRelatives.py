@@ -18,4 +18,4 @@ class UserRelatives(Type):
     
     type: str | None = None
     person: UserRelatives_person
-    relatives: "list[UserRelatives]" | None = None
+    relatives: "list[UserRelatives]" = None

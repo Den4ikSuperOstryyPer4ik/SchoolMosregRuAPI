@@ -9,13 +9,13 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
     
     async def check_person(self, value):
         if value == "me":
-            return (self.me_context).personId if self.me_context else (await self.get_user()).personId
+            return (await self.get_user()).personId
         else:
             return value
         
     async def check_user(self, value):
         if value == "me":
-            return (self.me_user).id if self.me_user else (await self.get_user()).id
+            return (await self.get_user()).id
         else:
             return value
     
@@ -29,7 +29,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Authorities/Authorities_GetOwnOrganizations
         """
         
-        return await self.get("users/me/organizations", return_json=True)
+        return await self.get("v2/users/me/organizations", return_json=True)
     
     async def get_organization(self, organizationId: int | str) -> types.Organization:
         """[GET] users/me/organizations/{organizationId}
@@ -45,7 +45,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         """
         
         
-        return await self.get(f"users/me/organizations/{organizationId}", model=types.Organization)
+        return await self.get(f"v2/users/me/organizations/{organizationId}", model=types.Organization)
     
     async def get_token_with_code(self, code: str, client_id: str, client_secret: str, grant_type: str, refreshToken: str) -> types.TokenWithCode:
         """[POST] authorizations
@@ -71,7 +71,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Authorizations/Authorizations_PostTokenRequestCode
         """
         
-        return await self.post("authorizations", model=types.TokenWithCode, data={
+        return await self.post("v2/authorizations", model=types.TokenWithCode, data={
             "code": code,
             "client_id": client_id,
             "client_secret": client_secret,
@@ -92,7 +92,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/AverageMarks/AverageMarks_GetByPersonAndPeriod
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/reporting-periods/{period}/avg-mark", return_json=True)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/reporting-periods/{period}/avg-mark", return_json=True)
     
     async def get_person_avg_marks_by_subject(self, person: int | str, period, subject) -> str | None:
         """[GET] persons/{person}/reporting-periods/{period}/subjects/{subject}/avg-mark
@@ -109,7 +109,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/AverageMarks/AverageMarks_GetByPersonAndPeriodAndSubject
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/reporting-periods/{period}/subjects/{subject}/avg-mark", return_json=True)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/reporting-periods/{period}/subjects/{subject}/avg-mark", return_json=True)
     
     async def get_eduGroup_avg_marks_to_date(self, group: int | str, period: int | str, date: datetime | date) -> list[dict[str, Any]] | None:
         """[GET] edu-groups/{group}/reporting-periods/{period}/avg-marks/{date}
@@ -126,7 +126,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/AverageMarks/AverageMarks_GetByGroupAndPeriodOnDate
         """
         
-        return await self.get(f"edu-groups/{group}/reporting-periods/{period}/avg-marks/{self.datetime_to_string(date)}", return_json=True)
+        return await self.get(f"v2/edu-groups/{group}/reporting-periods/{period}/avg-marks/{self.datetime_to_string(date)}", return_json=True)
     
     async def get_eduGroup_avg_marks(self, group: int | str, from_: datetime | date, to: datetime | date) -> list[dict[str, Any]] | None:
         """[GET] edu-groups/{group}/avg-marks/{from}/{to}
@@ -143,7 +143,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/AverageMarks/AverageMarks_ListByGroupAndDates
         """
         
-        return await self.get(f"edu-groups/{group}/avg-marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", return_json=True)
+        return await self.get(f"v2/edu-groups/{group}/avg-marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", return_json=True)
     
     async def get_user_childrens(self, userID: str | int = "me") -> list[types.Children] | None:
         """[GET] user/{userID}/children
@@ -158,7 +158,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Children/Children_GetChildrenByUserID
         """
         
-        return await self.get(f"user/{await self.check_user(userID)}/children", model=types.Children, is_list=True)
+        return await self.get(f"v2/user/{await self.check_user(userID)}/children", model=types.Children, is_list=True)
     
     async def get_person_childrens(self, personID: str | int = "me") -> list[types.Children] | None:
         """[GET] person/{personID}/children
@@ -173,7 +173,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Children/Children_GetChildrenByPersonID
         """
         
-        return await self.get(f"person/{await self.check_person(personID)}/children", model=types.Children, is_list=True)
+        return await self.get(f"v2/person/{await self.check_person(personID)}/children", model=types.Children, is_list=True)
      
     async def get_me_classmates(self) -> list[int] | None:
         """[GET] users/me/classmates
@@ -186,7 +186,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Classmates/Classmates_GetOwnClassmates
         """
         
-        return await self.get("users/me/classmates", return_json=True)
+        return await self.get("v2/users/me/classmates", return_json=True)
     
     async def get_context(self, userId: str | int = "me") -> types.Context:
         """[GET] users/{userId}/context | users/me/context
@@ -201,8 +201,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Context
         """
         
-        self.me_context = await self.get(f"users/{userId}/context", model=types.Context)
-        return self.me_context
+        return await self.get(f"v2/users/{userId}/context", model=types.Context)
     
     async def get_user_school_memberships(self, user: int | str = "me") -> types.SchoolMemberships:
         """[GET] users/{user}/school-memberships
@@ -217,7 +216,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetByUser
         """
         
-        return await self.get(f"users/{user}/school-memberships", model=types.SchoolMemberships)
+        return await self.get(f"v2/users/{user}/school-memberships", model=types.SchoolMemberships)
     
     async def get_user_education(self, user: int | str = "me") -> types.SchoolMemberships:
         """[GET] users/{user}/education
@@ -232,7 +231,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetByUser_0
         """
         
-        return await self.get(f"users/{await self.check_user(user)}/education", model=types.SchoolMemberships)
+        return await self.get(f"v2/users/{await self.check_user(user)}/education", model=types.SchoolMemberships)
     
     async def get_person_education(self, person: int | str = "me") -> list[types.SchoolMemberships]:
         """[GET] persons/{person}/school-memberships
@@ -247,7 +246,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetSchoolMembershipsByPerson
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/school-memberships", model=types.SchoolMemberships)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/school-memberships", model=types.SchoolMemberships)
     
     async def get_user_schools(self, user: str | int = "me") -> list[int] | None:
         """[GET] users/{user}/schools | users/me/schools
@@ -262,7 +261,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetSchoolsByUser
         """
         
-        return await self.get(f"users/{user}/schools", return_json=True)
+        return await self.get(f"v2/users/{user}/schools", return_json=True)
     
     async def get_user_eduGroups(self, user: str | int = "me") -> list[int] | None:
         """[GET] users/{user}/edu-groups | users/me/edu-groups
@@ -277,7 +276,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetEduGroupsByUser
         """
         
-        return await self.get(f"users/{user}/edu-groups", return_json=True)
+        return await self.get(f"v2/users/{user}/edu-groups", return_json=True)
         
     async def get_eduGroup(self, eduGroup: int | str) -> types.EduGroup:
         """[GET] edu-groups/{eduGroup}
@@ -292,7 +291,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_Get
         """
         
-        return await self.get(f"edu-groups/{eduGroup}", model=types.EduGroup)
+        return await self.get(f"v2/edu-groups/{eduGroup}", model=types.EduGroup)
     
     async def get_school_eduGroups(self, school: str | int) -> list[types.EduGroup]:
         """[GET] schools/{school}/edu-groups
@@ -307,7 +306,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_GetBySchool
         """
         
-        return await self.get(f"schools/{school}/edu-groups", model=types.EduGroup, is_list=True)
+        return await self.get(f"v2/schools/{school}/edu-groups", model=types.EduGroup, is_list=True)
     
     async def get_person_eduGroups(self, person: str | int = "me") -> list[types.EduGroup]:
         """[GET] persons/{person}/edu-groups
@@ -322,7 +321,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_GetByPerson
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/edu-groups", model=types.EduGroup, is_list=True)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/edu-groups", model=types.EduGroup, is_list=True)
     
     async def get_eduGroup_persons(self, eduGroup: int | str) -> list[types.Person] | None:
         """[GET] edu-groups/{eduGroup}/persons
@@ -337,7 +336,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_GetGroupPersons
         """
         
-        return await self.get(f"edu-groups/{eduGroup}/persons", model=types.Person, is_list=True)
+        return await self.get(f"v2/edu-groups/{eduGroup}/persons", model=types.Person, is_list=True)
     
     async def get_parallel_eduGroups(self, groupId: int | str) -> list[types.EduGroup]:
         """[GET] edu-groups/{groupId}/parallel
@@ -352,7 +351,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_ListParallelGroups
         """
         
-        return await self.get(f"edu-groups/{groupId}/parallel", model=types.EduGroup, is_list=True)
+        return await self.get(f"v2/edu-groups/{groupId}/parallel", model=types.EduGroup, is_list=True)
 
     async def get_homeworks_by_period(self, school: str | int, startDate: datetime | date, endDate: datetime | date) -> types.HomeWork:
         """[GET] users/me/school/{school}/homeworks?startDate={startDate}&endDate={endDate}
@@ -369,7 +368,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Homeworks/Homeworks_ListUserHomeworksByPeriod
         """
         
-        return await self.get(f"users/me/school/{school}/homeworks?startDate={self.datetime_to_string(startDate)}&endDate={self.datetime_to_string(endDate)}", model=types.HomeWork)
+        return await self.get(f"v2/users/me/school/{school}/homeworks?startDate={self.datetime_to_string(startDate)}&endDate={self.datetime_to_string(endDate)}", model=types.HomeWork)
 
     async def get_homeworks_by_Ids(self, ids: int | str | list[int | str]) -> types.HomeWork:
         """[GET] users/me/school/homeworks?homeworkId={ids}
@@ -384,7 +383,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Homeworks/Homeworks_GetUserHomeworkByIds
         """
         
-        return await self.get(f"users/me/school/homeworks?homeworkId={ids if (isinstance(ids, int) or isinstance(ids, str)) else '&homeworkId='.join(ids)}", model=types.HomeWork)
+        return await self.get(f"v2/users/me/school/homeworks?homeworkId={ids if (isinstance(ids, int) or isinstance(ids, str)) else '&homeworkId='.join(ids)}", model=types.HomeWork)
 
     async def get_lesson_log_entries(self, lesson: str | int) -> list[types.LessonLogEntries] | None:
         """[GET] lessons/{lesson}/log-entries
@@ -399,7 +398,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_GetByLesson
         """
         
-        return await self.get(f"lessons/{lesson}/log-entries", model=types.LessonLogEntries, is_list=True)
+        return await self.get(f"v2/lessons/{lesson}/log-entries", model=types.LessonLogEntries, is_list=True)
     
     async def get_person_lesson_log_entries(self, lesson: str | int, person: str | int = "me") -> types.LessonLogEntries:
         """[GET] lesson-log-entries/lesson/{lesson}/person/{person}
@@ -415,7 +414,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_Get
         """
         
-        return await self.get(f"lesson-log-entries/lesson/{lesson}/person/{await self.check_person(person)}/edu-groups", model=types.LessonLogEntries)
+        return await self.get(f"v2/lesson-log-entries/lesson/{lesson}/person/{await self.check_person(person)}/edu-groups", model=types.LessonLogEntries)
     
     async def get_eduGroup_lessons_log_entries(self, eduGroup: str | int, subject: str | int, from_: datetime | date, to: datetime | date) -> list[types.LessonLogEntries]:
         """[GET] lesson-log-entries/group/{eduGroup}?subject={subject}&from={from_}&to={to}
@@ -434,7 +433,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_Get
         """
         
-        return await self.get(f"lesson-log-entries/group/{eduGroup}?subject={subject}&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
+        return await self.get(f"v2/lesson-log-entries/group/{eduGroup}?subject={subject}&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
     
     async def get_person_lessons_log_entries_by_subject(self, personID: str | int, subjectID: str | int, from_: datetime | date, to: datetime | date) -> list[types.LessonLogEntries]:
         """[GET] lesson-log-entries/person={personID}&subject={subjectID}&from={from}&to={to}
@@ -453,7 +452,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_ListByPersonAndSubjectAndDateRange_0
         """
         
-        return await self.get(f"lesson-log-entries/person={await self.check_person(personID)}&subject={subjectID}&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
+        return await self.get(f"v2/lesson-log-entries/person={await self.check_person(personID)}&subject={subjectID}&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
     
     async def get_person_lessons_log_entries(self, person: str | int, from_: datetime | date, to: datetime | date) -> list[types.LessonLogEntries]:
         """[GET] persons/{person}/lesson-log-entries&from={from}&to={to}
@@ -471,7 +470,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_GetByPersonAndPeriod
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/lesson-log-entries&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/lesson-log-entries&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
     
     async def get_lesson(self, lesson: str | int) -> types.Lesson:
         """[GET] lesssons/{lesson}
@@ -485,7 +484,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Lessons/Lessons_Get
         """
-        return await self.get(f"lessons/{lesson}", model=types.Lesson)
+        return await self.get(f"v2/lessons/{lesson}", model=types.Lesson)
     
     async def get_eduGroup_lesson_by_period(self, group: int | str, from_: datetime | date, to: datetime | date) -> list[types.Lesson]:
         """[GET] edu-groups/{group}/lessons/{from_}/{to}
@@ -501,7 +500,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Lessons/Lessons_GetByGroupAndPeriod
         """
-        return await self.get(f"edu-groups/{group}/lessons/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Lesson, is_list=True)
+        return await self.get(f"v2/edu-groups/{group}/lessons/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Lesson, is_list=True)
     
     async def get_eduGroup_lesson_by_period_and_subject(self, group: int | str, subject: int | str, from_: datetime | date, to: datetime | date) -> list[types.Lesson]:
         """[GET] edu-groups/{group}/subjects/{subject}/lessons/{from_}/{to}
@@ -518,7 +517,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Lessons/Lessons_GetByGroupAndPeriodAndSubject
         """
-        return await self.get(f"edu-groups/{group}/subjects/{subject}/lessons/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Lesson, is_list=True)
+        return await self.get(f"v2/edu-groups/{group}/subjects/{subject}/lessons/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Lesson, is_list=True)
     
     async def get_work_marks_histogram(self, workID: int | str) -> types.MarksHistogram:
         """[GET] works/{workID}/marks/histogram
@@ -532,7 +531,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/MarkHistograms/MarkHistograms_GetMarksByWork
         """
-        return await self.get(f"works/{workID}/marks/histogram", model=types.MarksHistogram)
+        return await self.get(f"v2/works/{workID}/marks/histogram", model=types.MarksHistogram)
         
     async def get_marks_histogram_by_period(self, periodID: int | str, subjectID: int | str, groupID: int | str) -> types.MarksHistogramByPeriod:
         """[GET] periods/{periodID}/subjects/{subjectID}/groups/{groupID}/marks/histogram
@@ -549,7 +548,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/MarkHistograms/MarkHistograms_GetMarksByPeriod
         """
         
-        return await self.get(f"periods/{periodID}/subjects/{subjectID}/groups/{groupID}/marks/histogram", model=types.MarksHistogramByPeriod)
+        return await self.get(f"v2/periods/{periodID}/subjects/{subjectID}/groups/{groupID}/marks/histogram", model=types.MarksHistogramByPeriod)
     
     async def get_mark(self, mark: int | str) -> types.Mark:
         """[GET] marks/{mark}
@@ -564,7 +563,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_Get
         """
         
-        return await self.get(f"marks/{mark}", model=types.Mark)
+        return await self.get(f"v2/marks/{mark}", model=types.Mark)
 
     async def get_work_marks(self, work: int | str) -> list[types.Mark]:
         """[GET] works/{work}/marks
@@ -579,7 +578,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByWork
         """
         
-        return await self.get(f"works/{work}/marks", model=types.Mark, is_list=True)
+        return await self.get(f"v2/works/{work}/marks", model=types.Mark, is_list=True)
 
     async def get_lesson_marks(self, lesson: int | str) -> list[types.Mark]:
         """[GET] lessons/{lesson}/marks
@@ -594,7 +593,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByLesson
         """
         
-        return await self.get(f"lessons/{lesson}/marks", model=types.Mark, is_list=True)
+        return await self.get(f"v2/lessons/{lesson}/marks", model=types.Mark, is_list=True)
     
     async def get_eduGroup_marks(self, group: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
         """[GET] edu-groups/{group}/marks/{from_}/{to}
@@ -611,7 +610,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByGroup
         """
         
-        return await self.get(f"edu-groups/{group}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return await self.get(f"v2/edu-groups/{group}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
     async def get_eduGroup_marks_by_subject(self, group: int | str, subject: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
         """[GET] edu-groups/{group}/subjects/{subject}/marks/{from_}/{to}
@@ -629,7 +628,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByGroupAndSubject
         """
         
-        return await self.get(f"edu-groups/{group}/subjects/{subject}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return await self.get(f"v2/edu-groups/{group}/subjects/{subject}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
     async def get_person_marks_in_school(self, person: int | str, school: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
         """[GET] persons/{person}/schools/{school}/marks/{from}/{to}
@@ -647,7 +646,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetBySchoolAndPersonAndPeriod
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/schools/{school}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/schools/{school}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
     async def get_person_marks_in_eduGroup(self, person: int | str, group: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
         """[GET] persons/{person}/edu-groups/{group}/marks/{from}/{to}
@@ -665,7 +664,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByGroupAndPersonAndPeriod
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/edu-groups/{group}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/edu-groups/{group}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
     async def get_person_marks_on_lesson(self, person: int | str, lesson: str | int) -> list[types.Mark]:
         """[GET] persons/{person}/lessons/{lesson}/marks
@@ -681,7 +680,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByLessonAndPerson
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/lessons/{lesson}/marks", model=types.Mark, is_list=True)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/lessons/{lesson}/marks", model=types.Mark, is_list=True)
     
     async def get_person_marks_on_work(self, person: int | str, work: str | int) -> list[types.Mark]:
         """[GET] persons/{person}/lessons/{lesson}/marks
@@ -697,7 +696,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByWorkAndPerson
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/works/{work}/marks", model=types.Mark, is_list=True)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/works/{work}/marks", model=types.Mark, is_list=True)
     
     async def get_person_marks_by_subject(self, person: int | str, subject: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
         """[GET] persons/{person}/subjects/{subject}/marks/{from_}/{to}
@@ -715,7 +714,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByPersonAndSubject
         """
         
-        return await self.get(f"persons/{person}/subjects/{subject}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return await self.get(f"v2/persons/{person}/subjects/{subject}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
     async def get_person_marks_on_lesson_by_date(self, person: int | str, date: datetime | date) -> list[types.Mark]:
         """[GET] lessons/{date}/persons/{person}/marks
@@ -731,7 +730,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByPersonAndLessonDate
         """
         
-        return await self.get(f"lessons/{date}/persons/{await self.check_person(person)}/marks", model=types.Mark, is_list=True)
+        return await self.get(f"v2/lessons/{date}/persons/{await self.check_person(person)}/marks", model=types.Mark, is_list=True)
     
     async def get_person_marks_by_date(self, person: int | str, date: datetime | date) -> list[types.Mark]:
         """[GET] persons/{person}/marks/{date}
@@ -747,7 +746,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByPersonAndMarkDate
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/marks/{date}", model=types.Mark, is_list=True)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/marks/{date}", model=types.Mark, is_list=True)
     
     async def get_marks_values(self) -> dict[str, list[str, None]]:
         """[GET] marks/values
@@ -759,7 +758,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/MarkValues/MarkValues_GetAll
         """
 
-        return await self.get("marks/values", return_json=True)
+        return await self.get("v2/marks/values", return_json=True)
     
     async def get_marks_values_by_type(self, type: str) -> list[str]:
         """[GET] marks/values/type/{type}
@@ -772,9 +771,9 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/MarkValues/MarkValues_GetByType
         """
 
-        return await self.get(f"marks/values/type/{type}", return_json=True)
+        return await self.get(f"v2/marks/values/type/{type}", return_json=True)
     
-    async def get_recent_marks(self, person: str | int, group: int | str, fromDate: datetime | date = None, subject: int | str = None, limit: int = 10) -> types.RecentMarks:
+    async def get_recent_marks(self, person: str | int, group: int | str, fromDate: datetime | date = None, subject: int | str | None = None, limit: int = 10) -> types.RecentMarks:
         """[GET] persons/{person}/group/{group}/recentmarks
         
         Последние оценки/отметки посещаемости персоны по предмету,
@@ -806,7 +805,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         if subject:
             params["subject"] = str(subject)
         
-        return await self.get(f"persons/{await self.check_person(person)}/group/{group}/recentmarks", params=params, model=types.RecentMarks)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/group/{group}/recentmarks", params=params, model=types.RecentMarks)
     
     async def get_task(self, task: str | int) -> types.Task:
         """[GET] tasks/{task}
@@ -821,7 +820,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Tasks/Tasks_Get
         """
         
-        return await self.get(f"tasks/{task}", model=types.Task)
+        return await self.get(f"v2/tasks/{task}", model=types.Task)
 
     async def get_lesson_tasks(self, lesson: str | int) -> list[types.Task]:
         """[GET] lessons/{lesson}/tasks
@@ -836,7 +835,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Tasks/Tasks_GetByLesson
         """
         
-        return await self.get(f"lessons/{lesson}/tasks", model=types.Task, is_list=True)
+        return await self.get(f"v2/lessons/{lesson}/tasks", model=types.Task, is_list=True)
 
     async def get_work_tasks(self, work: str | int, persons: str | int | list[int | str]) -> list[types.Task]:
         """[GET] works/{work}/tasks
@@ -852,7 +851,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Tasks/Tasks_GetByWork
         """
         
-        return await self.get(f"works/{work}/tasks{'?persons={}'.format(await self.check_person(persons) if (isinstance(persons, int) or isinstance(persons, str)) else '&persons='.join([await self.check_person(i) for i in persons]))}", model=types.Task, is_list=True)
+        return await self.get(f"v2/works/{work}/tasks{'?persons={}'.format(await self.check_person(persons) if (isinstance(persons, int) or isinstance(persons, str)) else '&persons='.join([await self.check_person(i) for i in persons]))}", model=types.Task, is_list=True)
 
     async def get_undone_person_tasks(self, personId: str | int = "me") -> list[types.Task]:
         """[GET] persons/{personId}/undone
@@ -868,7 +867,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Tasks/Tasks_ListNotCompletedByPersonId
         """
         
-        return await self.get(f"persons/{await self.check_person(personId)}/undone", model=types.Task, is_list=True)
+        return await self.get(f"v2/persons/{await self.check_person(personId)}/undone", model=types.Task, is_list=True)
 
     async def get_person_tasks(self, person: str | int, subject: int | str, from_: datetime | date, to: datetime | date, pageNumber: int = None, pageSize: int = None) -> list[types.Task]:
         """[GET] persons{person}/tasks
@@ -900,7 +899,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         if pageSize:
             params["pageSize"] = str(pageSize)
         
-        return await self.get(f"persons/{await self.check_person(person)}/tasks", model=types.Task, is_list=True, params=params)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/tasks", model=types.Task, is_list=True, params=params)
 
     async def get_eduGroup_subjects(self, eduGroup: int | str) -> list[types.Subject]:
         """[GET] edu-groups/{eduGroup}/subjects
@@ -915,7 +914,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Subjects/Subjects_GetByEduGroup
         """
         
-        return await self.get(f"edu-groups/{eduGroup}/subjects", model=types.Subject, is_list=True)
+        return await self.get(f"v2/edu-groups/{eduGroup}/subjects", model=types.Subject, is_list=True)
 
     async def get_school_subjects(self, school: int | str) -> list[types.Subject]:
         """[GET] schools/{school}/subjects
@@ -928,7 +927,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Subjects/Subjects_GetSchoolSubjects
         """
         
-        return await self.get(f"schools/{school}/subjects", model=types.Subject, is_list=True)
+        return await self.get(f"v2/schools/{school}/subjects", model=types.Subject, is_list=True)
 
     async def get_school_parameters(self, school: int | str) -> types.SchoolParameters:
         """[GET] schools/{school}/parameters
@@ -941,7 +940,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/SchoolsParameters/SchoolsParameters_Get
         """
         
-        return await self.get(f"schools/{school}/parameters", model=types.SchoolParameters)
+        return await self.get(f"v2/schools/{school}/parameters", model=types.SchoolParameters)
 
     async def get_school(self, school: int | str) -> types.School:
         """[GET] schools/{school}
@@ -954,7 +953,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Schools/Schools_Get
         """
         
-        return await self.get(f"schools/{school}", model=types.School)
+        return await self.get(f"v2/schools/{school}", model=types.School)
 
     async def get_school_membership(self, school: int | str, schoolMembershipType: str = "Staff") -> list[types.Person]:
         """[GET] schools/{school}/membership
@@ -968,7 +967,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Schools/Schools_GetSchoolMembership
         """
         
-        return await self.get(f"schools/{school}/membership?schoolMembershipType={schoolMembershipType}", model=types.Person, is_list=True)
+        return await self.get(f"v2/schools/{school}/membership?schoolMembershipType={schoolMembershipType}", model=types.Person, is_list=True)
 
     async def get_person_schools(self, excludeOrganizations: bool = "") -> list[types.School]:
         """[GET] schools/person-schools
@@ -1004,7 +1003,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Schedules/Schedules_GetByPersonAndPeriod
         """
         
-        return await self.get(f"persons/{await self.check_person(person)}/groups/{group}/schedules?startDate={self.datetime_to_string(startDate)}&endDate={self.datetime_to_string(endDate)}", model=types.Schedule)
+        return await self.get(f"v2/persons/{await self.check_person(person)}/groups/{group}/schedules?startDate={self.datetime_to_string(startDate)}&endDate={self.datetime_to_string(endDate)}", model=types.Schedule)
 
     async def get_eduGroup_reporting_periods(self, eduGroup: int | str) -> list[types.ReportingPeriod]:
         """[GET] edu-groups/{eduGroup}/reporting-periods
@@ -1019,7 +1018,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/ReportingPeriods/ReportingPeriods_GetByEduGroup
         """
         
-        return await self.get(f"edu-groups/{eduGroup}/reporting-periods", model=types.ReportingPeriod, is_list=True)
+        return await self.get(f"v2/edu-groups/{eduGroup}/reporting-periods", model=types.ReportingPeriod, is_list=True)
 
     async def get_eduGroup_reporting_periods_all(self, eduGroup: int | str) -> types.ReportingPeriodEduGroup:
         """[GET] edu-groups/{eduGroup}/reporting-periods-group
@@ -1034,7 +1033,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/ReportingPeriods/ReportingPeriods_GetGroupReportingPeriodsGroup
         """
         
-        return await self.get(f"edu-groups/{eduGroup}/reporting-periods-group", model=types.ReportingPeriodEduGroup)
+        return await self.get(f"v2/edu-groups/{eduGroup}/reporting-periods-group", model=types.ReportingPeriodEduGroup)
 
     async def get_person(self, person: int | str = "me") -> types.Person:
         """[GET] persons/{person}
@@ -1049,8 +1048,8 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Persons/Persons_Get
         """
         
-        self.me_person = await self.get(f"persons/{await self.check_person(person)}", model=types.Person)
-        return self.me_person
+        
+        return await self.get(f"v2/persons/{await self.check_person(person)}", model=types.Person)
 
     async def get_eduGroup_students(self, eduGroup: int | str) -> list[types.Person]:
         """[GET] edu-groups/{eduGroup}/students
@@ -1065,14 +1064,14 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Persons/Persons_GetByEduGroup_0
         """
         
-        return await self.get(f"edu-groups/{eduGroup}/students", model=types.Person, is_list=True)
+        return await self.get(f"v2/edu-groups/{eduGroup}/students", model=types.Person, is_list=True)
  
     async def search_person(
         self,
-        lastName: str = None,
-        firstName: str = None,
-        middleName: str = None,
-        snils: str = None,
+        lastName: str | None = None,
+        firstName: str | None = None,
+        middleName: str | None = None,
+        snils: str | None = None,
         birthday: date = None,
     ) -> None | list[types.Person]:
         """[GET] person/search
@@ -1107,7 +1106,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         if birthday:
             params["birthday"] = self.date_to_string(birthday)
 
-        return await self.get("person/search", params=params, model=types.Person, is_list=True)
+        return await self.get("v2/person/search", params=params, model=types.Person, is_list=True)
     
     async def get_eduGroup_teachers(self, group: int | str) -> list[types.EduGroupTeacher]:
         """[GET] edu-groups/{group}/teachers
@@ -1123,7 +1122,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Teacher/Teacher_GetEduGroupTeachers
         """
         
-        return await self.get(f'edu-groups/{group}/teachers', model=types.EduGroupTeacher, is_list=True)
+        return await self.get(f'v2/edu-groups/{group}/teachers', model=types.EduGroupTeacher, is_list=True)
     
     async def get_school_teachers(self, school: int | str) -> list[types.SchoolTeacher]:
         """[GET] teacher/{teacher}/students
@@ -1138,7 +1137,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Teacher/Teacher_GetSchoolTeachers
         """
         
-        return await self.get(f'schools/{school}/teachers', model=types.SchoolTeacher, is_list=True)
+        return await self.get(f'v2/schools/{school}/teachers', model=types.SchoolTeacher, is_list=True)
     
     async def get_teacher_students(self, teacher: int | str) -> list[types.TeacherStudent]:
         """[GET] teacher/{teacher}/students
@@ -1153,7 +1152,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Teacher/Teacher_GetStudentsByTeacher
         """
         
-        return await self.get(f'teacher/{teacher}/students', model=types.TeacherStudent, is_list=True)
+        return await self.get(f'v2/teacher/{teacher}/students', model=types.TeacherStudent, is_list=True)
     
     async def get_eduGroup_timetable(self, eduGroup: int | str) -> types.TimeTable:
         """[GET] edu-groups/{eduGroup}/timetables
@@ -1168,7 +1167,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Timetables/Timetables_GetByEduGroup
         """
         
-        return await self.get(f'edu-groups/{eduGroup}/timetables', model=types.TimeTable)
+        return await self.get(f'v2/edu-groups/{eduGroup}/timetables', model=types.TimeTable)
     
     async def get_school_timetable(self, school: int | str) -> types.TimeTable:
         """[GET] schools/{school}/timetables
@@ -1183,9 +1182,9 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Timetables/Timetables_GetBySchool
         """
         
-        return await self.get(f'schools/{school}/timetables', model=types.TimeTable)
+        return await self.get(f'v2/schools/{school}/timetables', model=types.TimeTable)
     
-    async def get_user_feed(self, date: datetime | date, childPersonId: int | str = None, limit: int | str = None) -> types.UserFeed:
+    async def get_user_feed(self, date: datetime | date, childPersonId: int | str | None = None, limit: int | str | None = None) -> types.UserFeed:
         """[GET] users/me/feed
 
         Лента пользователя
@@ -1217,7 +1216,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/UserRelatives/UserRelatives_GetOwnChildrenRelatives
         """
         
-        return await self.get(f"users/me/childrenrelatives", model=types.UserRelatives, is_list=True)
+        return await self.get(f"v2/users/me/childrenrelatives", model=types.UserRelatives, is_list=True)
     
     async def get_my_childrens(self) -> list[int | None] | None:
         """[GET] users/me/children
@@ -1227,7 +1226,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/UserRelatives/UserRelatives_GetOwnChildren
         """
         
-        return await self.get(f"users/me/children", return_json=True)
+        return await self.get(f"v2/users/me/children", return_json=True)
     
     async def get_user_relatives(self, user: str | int = "me") -> types.UserRelatives:
         """[GET] users/{user}/relatives | users/me/relatives
@@ -1240,7 +1239,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/UserRelatives/UserRelatives_GetRelatives
         """
         
-        return await self.get(f"users/{user}/relatives", model=types.UserRelatives)
+        return await self.get(f"v2/users/{user}/relatives", model=types.UserRelatives)
     
     async def get_user(self, user: str | int = "me") -> types.User:
         """[GET] users/{user} | users/me
@@ -1253,8 +1252,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Users/Users_Get
         """
         
-        self.me_user = await self.get(f"users/{user}", model=types.User)
-        return self.me_user
+        return await self.get(f"v2/users/{user}", model=types.User)
     
     async def get_user_roles(self, user: str | int = "me") -> list[int | None] | None:
         """[GET] users/{user}/roles | users/me/roles
@@ -1267,7 +1265,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Users/Users_Get
         """
         
-        return await self.get(f"users/{user}/roles", return_json=True)
+        return await self.get(f"v2/users/{user}/roles", return_json=True)
     
     async def get_weighted_average_marks(self, group: int | str, from_: datetime | date, to: datetime | date) -> types.WeightedAverageMarks:
         """[GET] edu-groups/{group}/wa-marks/{from_}/{to}
@@ -1284,7 +1282,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/WeightedAverageMarks/WeightedAverageMarks_GetGroupAverageMarks
         """
         
-        return await self.get(f'edu-groups/{group}/wa-marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}', model=types.WeightedAverageMarks)
+        return await self.get(f'v2/edu-groups/{group}/wa-marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}', model=types.WeightedAverageMarks)
     
     async def get_lesson_works(self, lesson: str | int) -> types.Work:
         """[GET] lessons/{lesson}/works
@@ -1299,7 +1297,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Works/Works_GetByLesson_0
         """
         
-        return await self.get(f'lessons/{lesson}/works', model=types.Work, is_list=True)
+        return await self.get(f'v2/lessons/{lesson}/works', model=types.Work, is_list=True)
     
     async def get_work(self, work: str | int) -> types.Work:
         """[GET] works/{work}
@@ -1314,7 +1312,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Works/Works_Get
         """
         
-        return await self.get(f'works/{work}', model=types.Work)
+        return await self.get(f'v2/works/{work}', model=types.Work)
     
     async def edit_homework_status(self, work: int | str, person: str | int = "me", change: dict[str, str] = {"action": "StartWorking"}):
         """[POST] works/{work}/persons/{person}/status
@@ -1331,7 +1329,7 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Works/Works_ChangeStatus
         """
         
-        return await self.post(f'works/{work}/persons/{await self.check_person(person)}/status', return_json=True, data=change)
+        return await self.post(f'v2/works/{work}/persons/{await self.check_person(person)}/status', return_json=True, data=change)
     
     async def get_school_work_types(self, school: str | int) -> list[types.WorkType]:
         """[GET] work-types/{school}
@@ -1346,4 +1344,4 @@ class AsyncSchoolMosregRUAPI(AsyncBaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/WorkTypes/WorkTypes_Get
         """
         
-        return await self.get(f'work-types/{school}', model=types.WorkType, is_list=True)
+        return await self.get(f'v2/work-types/{school}', model=types.WorkType, is_list=True)

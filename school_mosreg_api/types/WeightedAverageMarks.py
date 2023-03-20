@@ -2,7 +2,7 @@ from .model import Type
 
 class WeightedAverageMarks_SubjectMark_Mark(Type):
     person: int
-    value: int
+    value: float
 
 class WeightedAverageMarks_SubjectMarks(Type):
     subject: int

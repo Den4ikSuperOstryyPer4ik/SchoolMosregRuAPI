@@ -1,3 +1,4 @@
+from typing import Optional
 from .model import Type
 from .Subjects import Subject
 
@@ -6,16 +7,16 @@ class EduGroup(Type):
     
     id: int
     id_str: str
-    parentIds: list[int] = []
-    parentIds_str: list[str] = []
-    type: str
+    parentIds: list[Optional[int]] = []
+    parentIds_str: list[Optional[str]] = []
+    type: Optional[str] = None
     name: str
-    fullName: str | None = None
-    parallel: int | None = None
-    timetable: int | None = None
-    timetable_str: str | None = None
-    status: str | None = None
-    studyyear: int | None = None
-    educationType: str | None = None
-    subjects: list[Subject] | None = []
-    journaltype: str | None = None
+    fullName: Optional[str] = None
+    parallel: Optional[int] = None
+    timetable: Optional[int] = None
+    timetable_str: Optional[str] = None
+    status: Optional[str] = None
+    studyyear: Optional[int] = None
+    educationType: Optional[str] = None
+    subjects: Optional[list[Optional[Subject]]] = []
+    journaltype: Optional[str] = None

@@ -1,5 +1,6 @@
 from datetime import datetime
-from .model import Type
+from typing import Optional
+from .model import Type, TypeMobile
 
 
 class Task(Type):
@@ -13,3 +14,7 @@ class Task(Type):
     work_str: str
     status: str
     targetDate: datetime
+
+class TaskStatus(TypeMobile):
+    error: Optional[str] = None
+    taskStatus: Optional[int] = None

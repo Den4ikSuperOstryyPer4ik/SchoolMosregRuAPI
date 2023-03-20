@@ -1,8 +1,11 @@
+from typing import Optional
+
+
 class APIError(Exception):
     """Обработка всех типов ошибок"""
     NAME = "APIError"
 
-    def __init__(self, url: str, status_code: int, description: str | None = None) -> None:
+    def __init__(self, url: str, status_code: int, description: Optional[str] = None) -> None:
         error_text = f"API-Error | {status_code}:{self.NAME}:\nURL: {url}"
         
         if description:
@@ -177,5 +180,5 @@ all_error_types = {
 }
 
 
-def raise_error(url: str, status_code: int, error_type: str, description: str | None = None):
+def raise_error(url: str, status_code: int, error_type: str, description: Optional[str] = None):
     raise all_error_types[all_error_types_str__dict[error_type]](url, status_code, description)

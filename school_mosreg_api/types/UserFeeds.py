@@ -15,18 +15,18 @@ class Mark_(Type):
     id_str: str
     type: str
     value: str
-    textValue: str
+    textValue: str | None = None
     person: int
-    person_str: str
+    person_str: str | None = None
     work: int
     work_str: str
-    lesson: int
-    lesson_str: str
-    number: int
-    date: datetime
+    lesson: int | None = None
+    lesson_str: str | None = None
+    number: int | None = None
+    date: datetime | None = None
     workType: int
-    mood: str
-    use_avg_calc: bool
+    mood: str | None = None
+    use_avg_calc: bool | None = None
 
 
 class MarksList(Type):
@@ -44,8 +44,8 @@ class Lesson(Type):
 
 class MarksCard(Type):
     marks: list[Mark]
-    lesson: Lesson
-    isImportant: bool
+    lesson: Lesson | None = None
+    isImportant: bool | None = None
     subjectName: str
     subjectId: int
     workTypeName: str
@@ -84,25 +84,25 @@ class TodayHomework(Type):
 
 
 class TodaySchedule(Type):
-    lessonId: int
-    lessonStatus: str
-    number: int
+    lessonId: int | None = None
+    lessonStatus: str | None = None
+    number: int | None = None
     subjectName: str
-    importantWorkTypes: list[ImportantWorkType]
+    importantWorkTypes: list[ImportantWorkType] = []
 
 
 class LessonLogEntry(Type):
     person: int
-    lesson: int
+    lesson: int | None = None
     person_str: str
-    lesson_str: str
-    comment: str
-    status: str
-    createdDate: datetime
+    lesson_str: str | None = None
+    comment: str | None = None
+    status: str | None = None
+    createdDate: datetime | None = None
 
 
 class LogEntries(Type):
-    lessonLogEntry: LessonLogEntry
+    lessonLogEntry: LessonLogEntry | None = None
     subjectName: str
     lessonTitle: str
 

@@ -1,5 +1,5 @@
 from .model import Type
-
+from typing import Optional
 
 from .Works import Work
 from .Subjects import Subject
@@ -8,30 +8,30 @@ import datetime
 
 class LESSON(Type):
     id: int
-    id_str: str | None = None
-    title: str | None = None
-    date: datetime.datetime | None = None
-    number: int | str |  None | None = None
-    subject: Subject | None = None
-    group: int | None = None
-    status: str | None = None
-    resultPlaceId: int | None = None
+    id_str: Optional[str] = None
+    title: Optional[str] = None
+    date: Optional[datetime.datetime] = None
+    number: int | str |  Optional[None] = None
+    subject: Optional[Subject] = None
+    group: Optional[int] = None
+    status: Optional[str] = None
+    resultPlaceId: Optional[int] = None
     works: list[Work] = []
     teachers: list[int] = []
     teachers_str: list[str] = []
 
 class Lesson(Type):
     id: int
-    title: str | None = None
-    date: datetime.datetime | None = None
-    number: int | None = None
+    title: Optional[str] = None
+    date: Optional[datetime.datetime] = None
+    number: Optional[int] = None
     subjectId: int
-    status: str | None = None
-    resultPlaceId: int | None = None
-    building: str | None = None
-    place: str | None = None
-    floor: str | None = None
-    hours: str | None = None
+    status: Optional[str] = None
+    resultPlaceId: Optional[int] = None
+    building: Optional[str] = None
+    place: Optional[str] = None
+    floor: Optional[str] = None
+    hours: Optional[str] = None
     works: list[int] = []
     teachers: list[int] = []
     teachers_str: list[str] = []
@@ -39,27 +39,27 @@ class Lesson(Type):
 class HomeWorkFile(Type):
     id: int
     id_str: str
-    name: str | None = None
-    typeGroup: str | None = None
+    name: Optional[str] = None
+    typeGroup: Optional[str] = None
     type: str
-    pageUrl: str | None = None
+    pageUrl: Optional[str] = None
     downloadUrl: str
     user: User
-    size: int | None = None
-    vote: int | None = None
-    uploadedDate: datetime.datetime | None = None
-    storageType: str | None = None
+    size: Optional[int] = None
+    vote: Optional[int] = None
+    uploadedDate: Optional[datetime.datetime] = None
+    storageType: Optional[str] = None
 
 class Teacher(Type):
     id: int
     id_str: str
     userId: int
     userId_str: str
-    firstName: str | None = None
-    lastName: str | None = None
-    middleName: str | None = None
-    shortName: str | None = None
-    sex: str | None = None
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    middleName: Optional[str] = None
+    shortName: Optional[str] = None
+    sex: Optional[str] = None
 
 class HomeWork(Type):
     """[GET] /v2.0/users/me/school/{school}/homeworks\n~~~\n/v2.0/users/me/school/homeworks\n~~~\n/v2.0/persons/{person}/school/{school}/homeworks\n~~~\nДомашние задания\n~~~\nПрава доступа: EducationalInfo\n~~~"""

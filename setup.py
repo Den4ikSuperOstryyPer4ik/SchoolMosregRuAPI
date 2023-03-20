@@ -4,7 +4,7 @@ requires = ["pydantic", "aiohttp", "requests"]
  
 setup(
     name="school_mosreg_api",
-    version="0.9.0",
+    version="0.9.5",
     description="SchoolMosregAPI by DSOP",
     url="https://github.com/Den4ikSuperOstryyPer4ik/SchoolMosregRuAPI",
     download_url="https://github.com/Den4ikSuperOstryyPer4ik/SchoolMosregRuAPI/releases/latest",

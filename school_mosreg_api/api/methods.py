@@ -1,10 +1,10 @@
 from datetime import date, datetime
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from .base import BaseAPI
 from .. import types
 
 class SchoolMosregRUAPI(BaseAPI):
-    """Основной sync класс почти со всеми функциями API.\n~~~"""
+    """Основной sync класс почти со всеми функциями основного API.\n~~~"""
 
     def check_person(self, value):
         if value == "me":
@@ -28,9 +28,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Authorities/Authorities_GetOwnOrganizations
         """
         
-        return self.get("users/me/organizations", return_json=True)
+        return self.get("v2/users/me/organizations", return_json=True)
     
-    def get_organization(self, organizationId: int | str) -> types.Organization:
+    def get_organization(self, organizationId: Union[int, str]) -> types.Organization:
         """[GET] users/me/organizations/{organizationId}
         
         Данные указанной организации пользователя.
@@ -44,7 +44,7 @@ class SchoolMosregRUAPI(BaseAPI):
         """
         
         
-        return self.get(f"users/me/organizations/{organizationId}", model=types.Organization)
+        return self.get(f"v2/users/me/organizations/{organizationId}", model=types.Organization)
     
     def get_token_with_code(self, code: str, client_id: str, client_secret: str, grant_type: str, refreshToken: str) -> types.TokenWithCode:
         """[POST] authorizations
@@ -70,14 +70,14 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Authorizations/Authorizations_PostTokenRequestCode
         """
         
-        return self.post("authorizations", model=types.TokenWithCode, data={
+        return self.post("v2/authorizations", model=types.TokenWithCode, data={
             "code": code,
             "client_id": client_id,
             "client_secret": client_secret,
             "grant_type": grant_type,
             "refreshToken": refreshToken})
         
-    def get_person_avg_marks(self, person: int | str, period) -> Optional[str]:
+    def get_person_avg_marks(self, person: Union[int, str], period) -> Optional[str]:
         """[GET] persons/{person}/reporting-periods/{period}/avg-mark
         
         Оценка персоны за отчетный период
@@ -91,9 +91,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/AverageMarks/AverageMarks_GetByPersonAndPeriod
         """
         
-        return self.get(f"persons/{self.check_person(person)}/reporting-periods/{period}/avg-mark", return_json=True)
+        return self.get(f"v2/persons/{self.check_person(person)}/reporting-periods/{period}/avg-mark", return_json=True)
     
-    def get_person_avg_marks_by_subject(self, person: int | str, period, subject) -> Optional[str]:
+    def get_person_avg_marks_by_subject(self, person: Union[int, str], period, subject) -> Optional[str]:
         """[GET] persons/{person}/reporting-periods/{period}/subjects/{subject}/avg-mark
         
         Оценка персоны по предмету за отчетный период
@@ -108,9 +108,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/AverageMarks/AverageMarks_GetByPersonAndPeriodAndSubject
         """
         
-        return self.get(f"persons/{self.check_person(person)}/reporting-periods/{period}/subjects/{subject}/avg-mark", return_json=True)
+        return self.get(f"v2/persons/{self.check_person(person)}/reporting-periods/{period}/subjects/{subject}/avg-mark", return_json=True)
     
-    def get_eduGroup_avg_marks_to_date(self, group: int | str, period: int | str, date: datetime | date) -> Optional[list[dict[str, Any]]]:
+    def get_eduGroup_avg_marks_to_date(self, group: Union[int, str], period: Union[int, str], date: Union[datetime, date]) -> Optional[list[dict[str, Any]]]:
         """[GET] edu-groups/{group}/reporting-periods/{period}/avg-marks/{date}
         
         Оценки учебной группы по предмету за отчетный период до определенной даты
@@ -125,9 +125,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/AverageMarks/AverageMarks_GetByGroupAndPeriodOnDate
         """
         
-        return self.get(f"edu-groups/{group}/reporting-periods/{period}/avg-marks/{self.datetime_to_string(date)}", return_json=True)
+        return self.get(f"v2/edu-groups/{group}/reporting-periods/{period}/avg-marks/{self.datetime_to_string(date)}", return_json=True)
     
-    def get_eduGroup_avg_marks(self, group: int | str, from_: datetime | date, to: datetime | date) -> Optional[list[dict[str, Any]]]:
+    def get_eduGroup_avg_marks(self, group: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> Optional[list[dict[str, Any]]]:
         """[GET] edu-groups/{group}/avg-marks/{from}/{to}
         
         Оценки учебной группы за период
@@ -142,9 +142,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/AverageMarks/AverageMarks_ListByGroupAndDates
         """
         
-        return self.get(f"edu-groups/{group}/avg-marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", return_json=True)
+        return self.get(f"v2/edu-groups/{group}/avg-marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", return_json=True)
     
-    def get_user_childrens(self, userID: str | int = "me") -> Optional[list[types.Children]]:
+    def get_user_childrens(self, userID: Union[int, str] = "me") -> Optional[list[types.Children]]:
         """[GET] user/{userID}/children
         
         Получение списка детей по идентификатору родительского пользователя
@@ -157,9 +157,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Children/Children_GetChildrenByUserID
         """
         
-        return self.get(f"user/{self.check_user(userID)}/children", model=types.Children, is_list=True)
+        return self.get(f"v2/user/{self.check_user(userID)}/children", model=types.Children, is_list=True)
     
-    def get_person_childrens(self, personID: str | int = "me") -> list[types.Children] | None:
+    def get_person_childrens(self, personID: Union[int, str] = "me") -> list[types.Children]:
         """[GET] person/{personID}/children
         
         Получение списка детей по идентификатору родительской персоны
@@ -172,9 +172,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Children/Children_GetChildrenByPersonID
         """
         
-        return self.get(f"person/{self.check_person(personID)}/children", model=types.Children, is_list=True)
+        return self.get(f"v2/person/{self.check_person(personID)}/children", model=types.Children, is_list=True)
      
-    def get_me_classmates(self) -> list[int] | None:
+    def get_me_classmates(self) -> Optional[list[Optional[int]]]:
         """[GET] users/me/classmates
         
         Список id пользователей одноклассников текущего пользователя, если он является учеником,
@@ -185,9 +185,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Classmates/Classmates_GetOwnClassmates
         """
         
-        return self.get("users/me/classmates", return_json=True)
+        return self.get("v2/users/me/classmates", return_json=True)
     
-    def get_context(self, userId: str | int = "me") -> types.Context:
+    def get_context(self, userId: Union[int, str] = "me") -> types.Context:
         """[GET] users/{userId}/context | users/me/context
         
         Получение контекстной информации по пользователю
@@ -200,10 +200,10 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Context
         """
         
-        self.me_context = self.get(f"users/{userId}/context", model=types.Context)
-        return self.me_context
+        
+        return self.get(f"v2/users/{userId}/context", model=types.Context)
     
-    def get_user_school_memberships(self, user: int | str = "me") -> types.SchoolMemberships:
+    def get_user_school_memberships(self, user: Union[int, str] = "me") -> types.SchoolMemberships:
         """[GET] users/{user}/school-memberships
         
         Список участий в школах для произвольного пользователя
@@ -216,9 +216,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetByUser
         """
         
-        return self.get(f"users/{user}/school-memberships", model=types.SchoolMemberships)
+        return self.get(f"v2/users/{user}/school-memberships", model=types.SchoolMemberships)
     
-    def get_user_education(self, user: int | str = "me") -> types.SchoolMemberships:
+    def get_user_education(self, user: Union[int, str] = "me") -> types.SchoolMemberships:
         """[GET] users/{user}/education
         
         Список участий в школах для произвольного пользователя
@@ -231,9 +231,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetByUser_0
         """
         
-        return self.get(f"users/{self.check_user(user)}/education", model=types.SchoolMemberships)
+        return self.get(f"v2/users/{self.check_user(user)}/education", model=types.SchoolMemberships)
     
-    def get_person_education(self, person: int | str = "me") -> list[types.SchoolMemberships]:
+    def get_person_education(self, person: Union[int, str] = "me") -> list[types.SchoolMemberships]:
         """[GET] persons/{person}/school-memberships
         
         Список участий в школах для произвольного пользователя
@@ -246,9 +246,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetSchoolMembershipsByPerson
         """
         
-        return self.get(f"persons/{self.check_person(person)}/school-memberships", model=types.SchoolMemberships)
+        return self.get(f"v2/persons/{self.check_person(person)}/school-memberships", model=types.SchoolMemberships)
     
-    def get_user_schools(self, user: str | int = "me") -> list[int] | None:
+    def get_user_schools(self, user: Union[int, str] = "me") -> list[int] | None:
         """[GET] users/{user}/schools | users/me/schools
         
         Список идентификаторов школ произвольного/текущего пользователя
@@ -261,9 +261,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetSchoolsByUser
         """
         
-        return self.get(f"users/{user}/schools", return_json=True)
+        return self.get(f"v2/users/{user}/schools", return_json=True)
     
-    def get_user_eduGroups(self, user: str | int = "me") -> list[int] | None:
+    def get_user_eduGroups(self, user: Union[int, str] = "me") -> list[int] | None:
         """[GET] users/{user}/edu-groups | users/me/edu-groups
         
         Список идентификаторов классов произвольного/текущего пользователя
@@ -276,9 +276,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EducationMemberships/EducationMemberships_GetEduGroupsByUser
         """
         
-        return self.get(f"users/{user}/edu-groups", return_json=True)
+        return self.get(f"v2/users/{user}/edu-groups", return_json=True)
         
-    def get_eduGroup(self, eduGroup: int | str) -> types.EduGroup:
+    def get_eduGroup(self, eduGroup: Union[int, str]) -> types.EduGroup:
         """[GET] edu-groups/{eduGroup}
         
         Класс или учебная группа
@@ -291,9 +291,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_Get
         """
         
-        return self.get(f"edu-groups/{eduGroup}", model=types.EduGroup)
+        return self.get(f"v2/edu-groups/{eduGroup}", model=types.EduGroup)
     
-    def get_school_eduGroups(self, school: str | int) -> list[types.EduGroup]:
+    def get_school_eduGroups(self, school: Union[int, str]) -> list[types.EduGroup]:
         """[GET] schools/{school}/edu-groups
         
         Список классов в школе
@@ -306,9 +306,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_GetBySchool
         """
         
-        return self.get(f"schools/{school}/edu-groups", model=types.EduGroup, is_list=True)
+        return self.get(f"v2/schools/{school}/edu-groups", model=types.EduGroup, is_list=True)
     
-    def get_person_eduGroups(self, person: str | int = "me") -> list[types.EduGroup]:
+    def get_person_eduGroups(self, person: Union[int, str] = "me") -> list[types.EduGroup]:
         """[GET] persons/{person}/edu-groups
         
         Учебные группы персоны
@@ -321,9 +321,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_GetByPerson
         """
         
-        return self.get(f"persons/{self.check_person(person)}/edu-groups", model=types.EduGroup, is_list=True)
+        return self.get(f"v2/persons/{self.check_person(person)}/edu-groups", model=types.EduGroup, is_list=True)
     
-    def get_eduGroup_persons(self, eduGroup: int | str) -> list[types.Person] | None:
+    def get_eduGroup_persons(self, eduGroup: Union[int, str]) -> list[types.Person] | None:
         """[GET] edu-groups/{eduGroup}/persons
         
         Список учеников учебной группы
@@ -336,9 +336,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_GetGroupPersons
         """
         
-        return self.get(f"edu-groups/{eduGroup}/persons", model=types.Person, is_list=True)
+        return self.get(f"v2/edu-groups/{eduGroup}/persons", model=types.Person, is_list=True)
     
-    def get_parallel_eduGroups(self, groupId: int | str) -> list[types.EduGroup]:
+    def get_parallel_eduGroups(self, groupId: Union[int, str]) -> list[types.EduGroup]:
         """[GET] edu-groups/{groupId}/parallel
         
         Учебные группы персоны
@@ -351,9 +351,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/EduGroups/EduGroups_ListParallelGroups
         """
         
-        return self.get(f"edu-groups/{groupId}/parallel", model=types.EduGroup, is_list=True)
+        return self.get(f"v2/edu-groups/{groupId}/parallel", model=types.EduGroup, is_list=True)
 
-    def get_homeworks_by_period(self, school: str | int, startDate: datetime | date, endDate: datetime | date) -> types.HomeWork:
+    def get_homeworks_by_period(self, school: Union[int, str], startDate: Union[datetime, date], endDate: Union[datetime, date]) -> types.HomeWork:
         """[GET] users/me/school/{school}/homeworks?startDate={startDate}&endDate={endDate}
         
         Получить домашние задания пользователя за период времени
@@ -368,9 +368,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Homeworks/Homeworks_ListUserHomeworksByPeriod
         """
         
-        return self.get(f"users/me/school/{school}/homeworks?startDate={self.datetime_to_string(startDate)}&endDate={self.datetime_to_string(endDate)}", model=types.HomeWork)
+        return self.get(f"v2/users/me/school/{school}/homeworks?startDate={self.datetime_to_string(startDate)}&endDate={self.datetime_to_string(endDate)}", model=types.HomeWork)
 
-    def get_homeworks_by_Ids(self, ids: int | str | list[int | str]) -> types.HomeWork:
+    def get_homeworks_by_Ids(self, ids: Union[int, str] | list[Union[int, str]]) -> types.HomeWork:
         """[GET] users/me/school/homeworks?homeworkId={ids}
         
         Получить домашние задания по идентификаторам
@@ -383,9 +383,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Homeworks/Homeworks_GetUserHomeworkByIds
         """
         
-        return self.get(f"users/me/school/homeworks?homeworkId={ids if (isinstance(ids, int) or isinstance(ids, str)) else '&homeworkId='.join(ids)}", model=types.HomeWork)
+        return self.get(f"v2/users/me/school/homeworks?homeworkId={ids if (isinstance(ids, int) or isinstance(ids, str)) else '&homeworkId='.join(ids)}", model=types.HomeWork)
 
-    def get_lesson_log_entries(self, lesson: str | int) -> list[types.LessonLogEntries] | None:
+    def get_lesson_log_entries(self, lesson: Union[int, str]) -> list[types.LessonLogEntries] | None:
         """[GET] lessons/{lesson}/log-entries
         
         Список отметок о посещаемости на уроке
@@ -398,9 +398,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_GetByLesson
         """
         
-        return self.get(f"lessons/{lesson}/log-entries", model=types.LessonLogEntries, is_list=True)
+        return self.get(f"v2/lessons/{lesson}/log-entries", model=types.LessonLogEntries, is_list=True)
     
-    def get_person_lesson_log_entries(self, lesson: str | int, person: str | int = "me") -> types.LessonLogEntries:
+    def get_person_lesson_log_entries(self, lesson: Union[int, str], person: Union[int, str] = "me") -> types.LessonLogEntries:
         """[GET] lesson-log-entries/lesson/{lesson}/person/{person}
         
         Отметка о посещаемости ученика на уроке
@@ -414,9 +414,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_Get
         """
         
-        return self.get(f"lesson-log-entries/lesson/{lesson}/person/{self.check_person(person)}/edu-groups", model=types.LessonLogEntries)
+        return self.get(f"v2/lesson-log-entries/lesson/{lesson}/person/{self.check_person(person)}/edu-groups", model=types.LessonLogEntries)
     
-    def get_eduGroup_lessons_log_entries(self, eduGroup: str | int, subject: str | int, from_: datetime | date, to: datetime | date) -> list[types.LessonLogEntries]:
+    def get_eduGroup_lessons_log_entries(self, eduGroup: Union[int, str], subject: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.LessonLogEntries]:
         """[GET] lesson-log-entries/group/{eduGroup}?subject={subject}&from={from_}&to={to}
         
         Список отметок о посещаемости на уроках
@@ -433,9 +433,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_Get
         """
         
-        return self.get(f"lesson-log-entries/group/{eduGroup}?subject={subject}&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
+        return self.get(f"v2/lesson-log-entries/group/{eduGroup}?subject={subject}&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
     
-    def get_person_lessons_log_entries_by_subject(self, personID: str | int, subjectID: str | int, from_: datetime | date, to: datetime | date) -> list[types.LessonLogEntries]:
+    def get_person_lessons_log_entries_by_subject(self, personID: Union[int, str], subjectID: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.LessonLogEntries]:
         """[GET] lesson-log-entries/person={personID}&subject={subjectID}&from={from}&to={to}
         
         Список отметок о посещаемости обучающегося
@@ -452,9 +452,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_ListByPersonAndSubjectAndDateRange_0
         """
         
-        return self.get(f"lesson-log-entries/person={self.check_person(personID)}&subject={subjectID}&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
+        return self.get(f"v2/lesson-log-entries/person={self.check_person(personID)}&subject={subjectID}&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
     
-    def get_person_lessons_log_entries(self, person: str | int, from_: datetime | date, to: datetime | date) -> list[types.LessonLogEntries]:
+    def get_person_lessons_log_entries(self, person: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.LessonLogEntries]:
         """[GET] persons/{person}/lesson-log-entries&from={from}&to={to}
         
         Список отметок о посещаемости обучающегося за интервал времени
@@ -470,9 +470,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/LessonLog/LessonLog_GetByPersonAndPeriod
         """
         
-        return self.get(f"persons/{self.check_person(person)}/lesson-log-entries&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
+        return self.get(f"v2/persons/{self.check_person(person)}/lesson-log-entries&from={self.datetime_to_string(from_)}&to={self.datetime_to_string(to)}", model=types.LessonLogEntries, is_list=True)
     
-    def get_lesson(self, lesson: str | int) -> types.Lesson:
+    def get_lesson(self, lesson: Union[int, str]) -> types.Lesson:
         """[GET] lesssons/{lesson}
         
         Получить урок с заданным id
@@ -484,9 +484,9 @@ class SchoolMosregRUAPI(BaseAPI):
         
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Lessons/Lessons_Get
         """
-        return self.get(f"lessons/{lesson}", model=types.Lesson)
+        return self.get(f"v2/lessons/{lesson}", model=types.Lesson)
     
-    def get_eduGroup_lesson_by_period(self, group: int | str, from_: datetime | date, to: datetime | date) -> list[types.Lesson]:
+    def get_eduGroup_lesson_by_period(self, group: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.Lesson]:
         """[GET] edu-groups/{group}/lessons/{from_}/{to}
         
         Уроки группы за период
@@ -500,9 +500,9 @@ class SchoolMosregRUAPI(BaseAPI):
         
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Lessons/Lessons_GetByGroupAndPeriod
         """
-        return self.get(f"edu-groups/{group}/lessons/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Lesson, is_list=True)
+        return self.get(f"v2/edu-groups/{group}/lessons/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Lesson, is_list=True)
     
-    def get_eduGroup_lesson_by_period_and_subject(self, group: int | str, subject: int | str, from_: datetime | date, to: datetime | date) -> list[types.Lesson]:
+    def get_eduGroup_lesson_by_period_and_subject(self, group: Union[int, str], subject: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.Lesson]:
         """[GET] edu-groups/{group}/subjects/{subject}/lessons/{from_}/{to}
         
         Уроки группы по предмету за период
@@ -517,9 +517,9 @@ class SchoolMosregRUAPI(BaseAPI):
         
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Lessons/Lessons_GetByGroupAndPeriodAndSubject
         """
-        return self.get(f"edu-groups/{group}/subjects/{subject}/lessons/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Lesson, is_list=True)
+        return self.get(f"v2/edu-groups/{group}/subjects/{subject}/lessons/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Lesson, is_list=True)
     
-    def get_work_marks_histogram(self, workID: int | str) -> types.MarksHistogram:
+    def get_work_marks_histogram(self, workID: Union[int, str]) -> types.MarksHistogram:
         """[GET] works/{workID}/marks/histogram
         
         Получение деперсонализированной гистограмы оценок всего класса по идентификатору работы
@@ -531,9 +531,9 @@ class SchoolMosregRUAPI(BaseAPI):
         
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/MarkHistograms/MarkHistograms_GetMarksByWork
         """
-        return self.get(f"works/{workID}/marks/histogram", model=types.MarksHistogram)
+        return self.get(f"v2/works/{workID}/marks/histogram", model=types.MarksHistogram)
         
-    def get_marks_histogram_by_period(self, periodID: int | str, subjectID: int | str, groupID: int | str) -> types.MarksHistogramByPeriod:
+    def get_marks_histogram_by_period(self, periodID: Union[int, str], subjectID: Union[int, str], groupID: Union[int, str]) -> types.MarksHistogramByPeriod:
         """[GET] periods/{periodID}/subjects/{subjectID}/groups/{groupID}/marks/histogram
         
         Получение деперсонализированной гистограмы оценок всего класса за отчетный период
@@ -548,9 +548,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/MarkHistograms/MarkHistograms_GetMarksByPeriod
         """
         
-        return self.get(f"periods/{periodID}/subjects/{subjectID}/groups/{groupID}/marks/histogram", model=types.MarksHistogramByPeriod)
+        return self.get(f"v2/periods/{periodID}/subjects/{subjectID}/groups/{groupID}/marks/histogram", model=types.MarksHistogramByPeriod)
     
-    def get_mark(self, mark: int | str) -> types.Mark:
+    def get_mark(self, mark: Union[int, str]) -> types.Mark:
         """[GET] marks/{mark}
         
         Оценка
@@ -563,9 +563,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_Get
         """
         
-        return self.get(f"marks/{mark}", model=types.Mark)
+        return self.get(f"v2/marks/{mark}", model=types.Mark)
 
-    def get_work_marks(self, work: int | str) -> list[types.Mark]:
+    def get_work_marks(self, work: Union[int, str]) -> list[types.Mark]:
         """[GET] works/{work}/marks
         
         Список оценок за определенную работу на уроке
@@ -578,9 +578,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByWork
         """
         
-        return self.get(f"works/{work}/marks", model=types.Mark, is_list=True)
+        return self.get(f"v2/works/{work}/marks", model=types.Mark, is_list=True)
 
-    def get_lesson_marks(self, lesson: int | str) -> list[types.Mark]:
+    def get_lesson_marks(self, lesson: Union[int, str]) -> list[types.Mark]:
         """[GET] lessons/{lesson}/marks
         
         Оценки на уроке
@@ -593,9 +593,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByLesson
         """
         
-        return self.get(f"lessons/{lesson}/marks", model=types.Mark, is_list=True)
+        return self.get(f"v2/lessons/{lesson}/marks", model=types.Mark, is_list=True)
     
-    def get_eduGroup_marks(self, group: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
+    def get_eduGroup_marks(self, group: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.Mark]:
         """[GET] edu-groups/{group}/marks/{from_}/{to}
         
         Оценки учебной группы за период
@@ -610,9 +610,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByGroup
         """
         
-        return self.get(f"edu-groups/{group}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return self.get(f"v2/edu-groups/{group}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
-    def get_eduGroup_marks_by_subject(self, group: int | str, subject: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
+    def get_eduGroup_marks_by_subject(self, group: Union[int, str], subject: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.Mark]:
         """[GET] edu-groups/{group}/subjects/{subject}/marks/{from_}/{to}
         
         Оценки учебной группы по предмету за период 
@@ -628,9 +628,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByGroupAndSubject
         """
         
-        return self.get(f"edu-groups/{group}/subjects/{subject}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return self.get(f"v2/edu-groups/{group}/subjects/{subject}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
-    def get_person_marks_in_school(self, person: int | str, school: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
+    def get_person_marks_in_school(self, person: Union[int, str], school: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.Mark]:
         """[GET] persons/{person}/schools/{school}/marks/{from}/{to}
         
         Оценки персоны в школе за период
@@ -646,9 +646,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetBySchoolAndPersonAndPeriod
         """
         
-        return self.get(f"persons/{self.check_person(person)}/schools/{school}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return self.get(f"v2/persons/{self.check_person(person)}/schools/{school}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
-    def get_person_marks_in_eduGroup(self, person: int | str, group: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
+    def get_person_marks_in_eduGroup(self, person: Union[int, str], group: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.Mark]:
         """[GET] persons/{person}/edu-groups/{group}/marks/{from}/{to}
         
         Оценки персоны в учебной группе за период
@@ -664,9 +664,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByGroupAndPersonAndPeriod
         """
         
-        return self.get(f"persons/{self.check_person(person)}/edu-groups/{group}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return self.get(f"v2/persons/{self.check_person(person)}/edu-groups/{group}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
-    def get_person_marks_on_lesson(self, person: int | str, lesson: str | int) -> list[types.Mark]:
+    def get_person_marks_on_lesson(self, person: Union[int, str], lesson: Union[int, str]) -> list[types.Mark]:
         """[GET] persons/{person}/lessons/{lesson}/marks
         
         Оценки персоны за урок
@@ -680,9 +680,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByLessonAndPerson
         """
         
-        return self.get(f"persons/{self.check_person(person)}/lessons/{lesson}/marks", model=types.Mark, is_list=True)
+        return self.get(f"v2/persons/{self.check_person(person)}/lessons/{lesson}/marks", model=types.Mark, is_list=True)
     
-    def get_person_marks_on_work(self, person: int | str, work: str | int) -> list[types.Mark]:
+    def get_person_marks_on_work(self, person: Union[int, str], work: Union[int, str]) -> list[types.Mark]:
         """[GET] persons/{person}/lessons/{lesson}/marks
         
         Оценки персоны за работу
@@ -696,9 +696,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByWorkAndPerson
         """
         
-        return self.get(f"persons/{self.check_person(person)}/works/{work}/marks", model=types.Mark, is_list=True)
+        return self.get(f"v2/persons/{self.check_person(person)}/works/{work}/marks", model=types.Mark, is_list=True)
     
-    def get_person_marks_by_subject(self, person: int | str, subject: int | str, from_: datetime | date, to: datetime | date) -> list[types.Mark]:
+    def get_person_marks_by_subject(self, person: Union[int, str], subject: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> list[types.Mark]:
         """[GET] persons/{person}/subjects/{subject}/marks/{from_}/{to}
         
         Оценки персоны по предмету за период
@@ -714,9 +714,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByPersonAndSubject
         """
         
-        return self.get(f"persons/{person}/subjects/{subject}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
+        return self.get(f"v2/persons/{person}/subjects/{subject}/marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}", model=types.Mark, is_list=True)
     
-    def get_person_marks_on_lesson_by_date(self, person: int | str, date: datetime | date) -> list[types.Mark]:
+    def get_person_marks_on_lesson_by_date(self, person: Union[int, str], date: Union[datetime, date]) -> list[types.Mark]:
         """[GET] lessons/{date}/persons/{person}/marks
         
         Оценки персоны по дате урока
@@ -730,9 +730,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByPersonAndLessonDate
         """
         
-        return self.get(f"lessons/{date}/persons/{self.check_person(person)}/marks", model=types.Mark, is_list=True)
+        return self.get(f"v2/lessons/{date}/persons/{self.check_person(person)}/marks", model=types.Mark, is_list=True)
     
-    def get_person_marks_by_date(self, person: int | str, date: datetime | date) -> list[types.Mark]:
+    def get_person_marks_by_date(self, person: Union[int, str], date: Union[datetime, date]) -> list[types.Mark]:
         """[GET] persons/{person}/marks/{date}
         
         Оценки персоны по дате выставления оценки
@@ -746,7 +746,7 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Marks/Marks_GetByPersonAndMarkDate
         """
         
-        return self.get(f"persons/{self.check_person(person)}/marks/{date}", model=types.Mark, is_list=True)
+        return self.get(f"v2/persons/{self.check_person(person)}/marks/{date}", model=types.Mark, is_list=True)
     
     def get_marks_values(self) -> dict[str, list[str | None]]:
         """[GET] marks/values
@@ -758,7 +758,7 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/MarkValues/MarkValues_GetAll
         """
 
-        return self.get("marks/values", return_json=True)
+        return self.get("v2/marks/values", return_json=True)
     
     def get_marks_values_by_type(self, type: str) -> list[str]:
         """[GET] marks/values/type/{type}
@@ -771,9 +771,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/MarkValues/MarkValues_GetByType
         """
 
-        return self.get(f"marks/values/type/{type}", return_json=True)
+        return self.get(f"v2/marks/values/type/{type}", return_json=True)
     
-    def get_recent_marks(self, person: str | int, group: int | str, fromDate: datetime | date = None, subject: int | str = None, limit: int = 10) -> types.RecentMarks:
+    def get_recent_marks(self, person: Union[int, str], group: Union[int, str], fromDate: Union[datetime, date] = None, subject: Optional[Union[int, str]] = None, limit: int = 10) -> types.RecentMarks:
         """[GET] persons/{person}/group/{group}/recentmarks
         
         Последние оценки/отметки посещаемости персоны по предмету,
@@ -805,9 +805,9 @@ class SchoolMosregRUAPI(BaseAPI):
         if subject:
             params["subject"] = str(subject)
         
-        return self.get(f"persons/{self.check_person(person)}/group/{group}/recentmarks", params=params, model=types.RecentMarks)
+        return self.get(f"v2/persons/{self.check_person(person)}/group/{group}/recentmarks", params=params, model=types.RecentMarks)
     
-    def get_task(self, task: str | int) -> types.Task:
+    def get_task(self, task: Union[int, str]) -> types.Task:
         """[GET] tasks/{task}
         
         Домашнее задание
@@ -820,9 +820,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Tasks/Tasks_Get
         """
         
-        return self.get(f"tasks/{task}", model=types.Task)
+        return self.get(f"v2/tasks/{task}", model=types.Task)
 
-    def get_lesson_tasks(self, lesson: str | int) -> list[types.Task]:
+    def get_lesson_tasks(self, lesson: Union[int, str]) -> list[types.Task]:
         """[GET] lessons/{lesson}/tasks
         
         Список Домашних заданий на урок
@@ -835,25 +835,25 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Tasks/Tasks_GetByLesson
         """
         
-        return self.get(f"lessons/{lesson}/tasks", model=types.Task, is_list=True)
+        return self.get(f"v2/lessons/{lesson}/tasks", model=types.Task, is_list=True)
 
-    def get_work_tasks(self, work: str | int, persons: str | int | list[int | str]) -> list[types.Task]:
+    def get_work_tasks(self, work: Union[int, str], persons: Union[int, str] | list[Union[int, str]]) -> list[types.Task]:
         """[GET] works/{work}/tasks
         
         Список Домашних заданий
         
         Параметры:
             work: id работы (homework) (``str`` / ``int``)
-            persons: id (одно или несколько, обернутых в список) персоны (``int`` / ``str`` / ``list[str | int]``) (``"me"``, для текущего пользователя (можно и в списке указать))
+            persons: id (одно или несколько, обернутых в список) персоны (``int`` / ``str`` / ``list[Union[int, str]]``) (``"me"``, для текущего пользователя (можно и в списке указать))
         
         Права доступа: ``EducationalInfo``
         
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Tasks/Tasks_GetByWork
         """
         
-        return self.get(f"works/{work}/tasks{'?persons={}'.format(self.check_person(persons) if (isinstance(persons, int) or isinstance(persons, str)) else '&persons='.join([self.check_person(i) for i in persons]))}", model=types.Task, is_list=True)
+        return self.get(f"v2/works/{work}/tasks{'?persons={}'.format(self.check_person(persons) if (isinstance(persons, int) or isinstance(persons, str)) else '&persons='.join([self.check_person(i) for i in persons]))}", model=types.Task, is_list=True)
 
-    def get_undone_person_tasks(self, personId: str | int = "me") -> list[types.Task]:
+    def get_undone_person_tasks(self, personId: Union[int, str] = "me") -> list[types.Task]:
         """[GET] persons/{personId}/undone
         
         Список невыполненных Домашних заданий
@@ -867,9 +867,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Tasks/Tasks_ListNotCompletedByPersonId
         """
         
-        return self.get(f"persons/{self.check_person(personId)}/undone", model=types.Task, is_list=True)
+        return self.get(f"v2/persons/{self.check_person(personId)}/undone", model=types.Task, is_list=True)
 
-    def get_person_tasks(self, person: str | int, subject: int | str, from_: datetime | date, to: datetime | date, pageNumber: int = None, pageSize: int = None) -> list[types.Task]:
+    def get_person_tasks(self, person: Union[int, str], subject: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date], pageNumber: int = None, pageSize: int = None) -> list[types.Task]:
         """[GET] persons{person}/tasks
         
         Список Домашних заданий ученика по предмету
@@ -899,9 +899,9 @@ class SchoolMosregRUAPI(BaseAPI):
         if pageSize:
             params["pageSize"] = str(pageSize)
         
-        return self.get(f"persons/{self.check_person(person)}/tasks", model=types.Task, is_list=True, params=params)
+        return self.get(f"v2/persons/{self.check_person(person)}/tasks", model=types.Task, is_list=True, params=params)
 
-    def get_eduGroup_subjects(self, eduGroup: int | str) -> list[types.Subject]:
+    def get_eduGroup_subjects(self, eduGroup: Union[int, str]) -> list[types.Subject]:
         """[GET] edu-groups/{eduGroup}/subjects
 
         Список предметов, преподаваемых в классе в текущем отчетном периоде
@@ -914,9 +914,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Subjects/Subjects_GetByEduGroup
         """
         
-        return self.get(f"edu-groups/{eduGroup}/subjects", model=types.Subject, is_list=True)
+        return self.get(f"v2/edu-groups/{eduGroup}/subjects", model=types.Subject, is_list=True)
 
-    def get_school_subjects(self, school: int | str) -> list[types.Subject]:
+    def get_school_subjects(self, school: Union[int, str]) -> list[types.Subject]:
         """[GET] schools/{school}/subjects
 
         Список предметов, преподаваемых в образовательной организации в текущем учебном году
@@ -927,9 +927,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Subjects/Subjects_GetSchoolSubjects
         """
         
-        return self.get(f"schools/{school}/subjects", model=types.Subject, is_list=True)
+        return self.get(f"v2/schools/{school}/subjects", model=types.Subject, is_list=True)
 
-    def get_school_parameters(self, school: int | str) -> types.SchoolParameters:
+    def get_school_parameters(self, school: Union[int, str]) -> types.SchoolParameters:
         """[GET] schools/{school}/parameters
 
         Параметры общеобразовательной организации 
@@ -940,9 +940,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/SchoolsParameters/SchoolsParameters_Get
         """
         
-        return self.get(f"schools/{school}/parameters", model=types.SchoolParameters)
+        return self.get(f"v2/schools/{school}/parameters", model=types.SchoolParameters)
 
-    def get_school(self, school: int | str) -> types.School:
+    def get_school(self, school: Union[int, str]) -> types.School:
         """[GET] schools/{school}
 
         Профиль школы
@@ -953,9 +953,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Schools/Schools_Get
         """
         
-        return self.get(f"schools/{school}", model=types.School)
+        return self.get(f"v2/schools/{school}", model=types.School)
 
-    def get_school_membership(self, school: int | str, schoolMembershipType: str = "Staff") -> list[types.Person]:
+    def get_school_membership(self, school: Union[int, str], schoolMembershipType: str = "Staff") -> list[types.Person]:
         """[GET] schools/{school}/membership
 
         Список профилей пользователей школы
@@ -967,7 +967,7 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Schools/Schools_GetSchoolMembership
         """
         
-        return self.get(f"schools/{school}/membership?schoolMembershipType={schoolMembershipType}", model=types.Person, is_list=True)
+        return self.get(f"v2/schools/{school}/membership?schoolMembershipType={schoolMembershipType}", model=types.Person, is_list=True)
 
     def get_person_schools(self, excludeOrganizations: bool = "") -> list[types.School]:
         """[GET] schools/person-schools
@@ -980,9 +980,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Schools/Schools_GetPersonSchools
         """
         
-        return self.get("schools/person-schools" + ("" if excludeOrganizations == "" else "?excludeOrganizations={}".format('true' if excludeOrganizations else 'false')), model=types.School, is_list=True)
+        return self.get("v2/schools/person-schools" + ("" if excludeOrganizations == "" else "?excludeOrganizations={}".format('true' if excludeOrganizations else 'false')), model=types.School, is_list=True)
 
-    def get_person_schedules(self, person: int | str, group: int | str, startDate: datetime | date, endDate: datetime | date) -> types.Schedule:
+    def get_person_schedules(self, person: Union[int, str], group: Union[int, str], startDate: Union[datetime, date], endDate: Union[datetime, date]) -> types.Schedule:
         """[GET] persons/{person}/groups/{group}/schedules
         
         Расписание ученика
@@ -998,9 +998,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Schedules/Schedules_GetByPersonAndPeriod
         """
         
-        return self.get(f"persons/{self.check_person(person)}/groups/{group}/schedules?startDate={self.datetime_to_string(startDate)}&endDate={self.datetime_to_string(endDate)}", model=types.Schedule)
+        return self.get(f"v2/persons/{self.check_person(person)}/groups/{group}/schedules?startDate={self.datetime_to_string(startDate)}&endDate={self.datetime_to_string(endDate)}", model=types.Schedule)
 
-    def get_eduGroup_reporting_periods(self, eduGroup: int | str) -> list[types.ReportingPeriod]:
+    def get_eduGroup_reporting_periods(self, eduGroup: Union[int, str]) -> list[types.ReportingPeriod]:
         """[GET] edu-groups/{eduGroup}/reporting-periods
         
         Список отчётных периодов для класса или учебной группы
@@ -1013,9 +1013,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/ReportingPeriods/ReportingPeriods_GetByEduGroup
         """
         
-        return self.get(f"edu-groups/{eduGroup}/reporting-periods", model=types.ReportingPeriod, is_list=True)
+        return self.get(f"v2/edu-groups/{eduGroup}/reporting-periods", model=types.ReportingPeriod, is_list=True)
 
-    def get_eduGroup_reporting_periods_all(self, eduGroup: int | str) -> types.ReportingPeriodEduGroup:
+    def get_eduGroup_reporting_periods_all(self, eduGroup: Union[int, str]) -> types.ReportingPeriodEduGroup:
         """[GET] edu-groups/{eduGroup}/reporting-periods-group
         
         Группа отчётных периодов для класса или учебной группы
@@ -1028,9 +1028,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/ReportingPeriods/ReportingPeriods_GetGroupReportingPeriodsGroup
         """
         
-        return self.get(f"edu-groups/{eduGroup}/reporting-periods-group", model=types.ReportingPeriodEduGroup)
+        return self.get(f"v2/edu-groups/{eduGroup}/reporting-periods-group", model=types.ReportingPeriodEduGroup)
 
-    def get_person(self, person: int | str = "me") -> types.Person:
+    def get_person(self, person: Union[int, str] = "me") -> types.Person:
         """[GET] persons/{person}
         
         Профиль персоны
@@ -1043,10 +1043,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Persons/Persons_Get
         """
         
-        self.me_person = self.get(f"persons/{self.check_person(person)}", model=types.Person)
-        return self.me_person
+        return self.get(f"v2/persons/{self.check_person(person)}", model=types.Person)
 
-    def get_eduGroup_students(self, eduGroup: int | str) -> list[types.Person]:
+    def get_eduGroup_students(self, eduGroup: Union[int, str]) -> list[types.Person]:
         """[GET] edu-groups/{eduGroup}/students
         
         Список учеников в классе или учебной группе 
@@ -1059,7 +1058,7 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Persons/Persons_GetByEduGroup_0
         """
         
-        return self.get(f"edu-groups/{eduGroup}/students", model=types.Person, is_list=True)
+        return self.get(f"v2/edu-groups/{eduGroup}/students", model=types.Person, is_list=True)
  
     def search_person(
         self,
@@ -1101,9 +1100,9 @@ class SchoolMosregRUAPI(BaseAPI):
         if birthday:
             params["birthday"] = self.date_to_string(birthday)
 
-        return self.get("person/search", params=params, model=types.Person, is_list=True)
+        return self.get("v2/person/search", params=params, model=types.Person, is_list=True)
     
-    def get_eduGroup_teachers(self, group: int | str) -> list[types.EduGroupTeacher]:
+    def get_eduGroup_teachers(self, group: Union[int, str]) -> list[types.EduGroupTeacher]:
         """[GET] edu-groups/{group}/teachers
 
         Список учителей, которые ведут уроки в данной группе,
@@ -1117,9 +1116,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Teacher/Teacher_GetEduGroupTeachers
         """
         
-        return self.get(f'edu-groups/{group}/teachers', model=types.EduGroupTeacher, is_list=True)
+        return self.get(f'v2/edu-groups/{group}/teachers', model=types.EduGroupTeacher, is_list=True)
     
-    def get_school_teachers(self, school: int | str) -> list[types.SchoolTeacher]:
+    def get_school_teachers(self, school: Union[int, str]) -> list[types.SchoolTeacher]:
         """[GET] teacher/{teacher}/students
 
         Список преподавателей в выбранной образовательной организации
@@ -1132,9 +1131,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Teacher/Teacher_GetSchoolTeachers
         """
         
-        return self.get(f'schools/{school}/teachers', model=types.SchoolTeacher, is_list=True)
+        return self.get(f'v2/schools/{school}/teachers', model=types.SchoolTeacher, is_list=True)
     
-    def get_teacher_students(self, teacher: int | str) -> list[types.TeacherStudent]:
+    def get_teacher_students(self, teacher: Union[int, str]) -> list[types.TeacherStudent]:
         """[GET] teacher/{teacher}/students
 
         Список учеников для учителя который ведет уроки у этих учеников(они должны быть в расписании) от недели назад и на 30 дней вперед
@@ -1147,9 +1146,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Teacher/Teacher_GetStudentsByTeacher
         """
         
-        return self.get(f'teacher/{teacher}/students', model=types.TeacherStudent, is_list=True)
+        return self.get(f'v2/teacher/{teacher}/students', model=types.TeacherStudent, is_list=True)
     
-    def get_eduGroup_timetable(self, eduGroup: int | str) -> types.TimeTable:
+    def get_eduGroup_timetable(self, eduGroup: Union[int, str]) -> types.TimeTable:
         """[GET] edu-groups/{eduGroup}/timetables
 
         Получение расписания учебной группы
@@ -1162,9 +1161,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Timetables/Timetables_GetByEduGroup
         """
         
-        return self.get(f'edu-groups/{eduGroup}/timetables', model=types.TimeTable)
+        return self.get(f'v2/edu-groups/{eduGroup}/timetables', model=types.TimeTable)
     
-    def get_school_timetable(self, school: int | str) -> types.TimeTable:
+    def get_school_timetable(self, school: Union[int, str]) -> types.TimeTable:
         """[GET] schools/{school}/timetables
 
         Получение расписания школы
@@ -1177,9 +1176,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Timetables/Timetables_GetBySchool
         """
         
-        return self.get(f'schools/{school}/timetables', model=types.TimeTable)
+        return self.get(f'v2/schools/{school}/timetables', model=types.TimeTable)
     
-    def get_user_feed(self, date: datetime | date, childPersonId: int | str = None, limit: int | str = None) -> types.UserFeed:
+    def get_user_feed(self, date: Union[datetime, date], childPersonId: Optional[Union[int, str]] = None, limit: Optional[Union[int, str]] = None) -> types.UserFeed:
         """[GET] users/me/feed
 
         Лента пользователя
@@ -1211,7 +1210,7 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/UserRelatives/UserRelatives_GetOwnChildrenRelatives
         """
         
-        return self.get(f"users/me/childrenrelatives", model=types.UserRelatives, is_list=True)
+        return self.get(f"v2/users/me/childrenrelatives", model=types.UserRelatives, is_list=True)
     
     def get_my_childrens(self) -> list[int | None] | None:
         """[GET] users/me/children
@@ -1221,9 +1220,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/UserRelatives/UserRelatives_GetOwnChildren
         """
         
-        return self.get(f"users/me/children", return_json=True)
+        return self.get(f"v2/users/me/children", return_json=True)
     
-    def get_user_relatives(self, user: str | int = "me") -> types.UserRelatives:
+    def get_user_relatives(self, user: Union[int, str] = "me") -> types.UserRelatives:
         """[GET] users/{user}/relatives | users/me/relatives
         
         Получение всех родственных связей произвольного/текущего пользователя.
@@ -1234,9 +1233,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/UserRelatives/UserRelatives_GetRelatives
         """
         
-        return self.get(f"users/{user}/relatives", model=types.UserRelatives)
+        return self.get(f"v2/users/{user}/relatives", model=types.UserRelatives)
     
-    def get_user(self, user: str | int = "me") -> types.User:
+    def get_user(self, user: Union[int, str] = "me") -> types.User:
         """[GET] users/{user} | users/me
         
         Профиль текущего пользователя (или по ID)
@@ -1247,10 +1246,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Users/Users_Get
         """
         
-        self.me_user = self.get(f"users/{user}", model=types.User)
-        return self.me_user
+        return self.get(f"v2/users/{user}", model=types.User)
     
-    def get_user_roles(self, user: str | int = "me") -> list[int | None] | None:
+    def get_user_roles(self, user: Union[int, str] = "me") -> list[int | None] | None:
         """[GET] users/{user}/roles | users/me/roles
         
         Профиль текущего пользователя (или по ID)
@@ -1261,9 +1259,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Users/Users_Get
         """
         
-        return self.get(f"users/{user}/roles", return_json=True)
+        return self.get(f"v2/users/{user}/roles", return_json=True)
     
-    def get_weighted_average_marks(self, group: int | str, from_: datetime | date, to: datetime | date) -> types.WeightedAverageMarks:
+    def get_weighted_average_marks(self, group: Union[int, str], from_: Union[datetime, date], to: Union[datetime, date]) -> types.WeightedAverageMarks:
         """[GET] edu-groups/{group}/wa-marks/{from_}/{to}
 
         Получить взвешенные оценки за период.
@@ -1278,9 +1276,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/WeightedAverageMarks/WeightedAverageMarks_GetGroupAverageMarks
         """
         
-        return self.get(f'edu-groups/{group}/wa-marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}', model=types.WeightedAverageMarks)
+        return self.get(f'v2/edu-groups/{group}/wa-marks/{self.datetime_to_string(from_)}/{self.datetime_to_string(to)}', model=types.WeightedAverageMarks)
     
-    def get_lesson_works(self, lesson: str | int) -> types.Work:
+    def get_lesson_works(self, lesson: Union[int, str]) -> types.Work:
         """[GET] lessons/{lesson}/works
 
         Список работ на уроке
@@ -1293,9 +1291,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Works/Works_GetByLesson_0
         """
         
-        return self.get(f'lessons/{lesson}/works', model=types.Work, is_list=True)
+        return self.get(f'v2/lessons/{lesson}/works', model=types.Work, is_list=True)
     
-    def get_work(self, work: str | int) -> types.Work:
+    def get_work(self, work: Union[int, str]) -> types.Work:
         """[GET] works/{work}
 
         Работа на уроке по ID
@@ -1308,9 +1306,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Works/Works_Get
         """
         
-        return self.get(f'works/{work}', model=types.Work)
+        return self.get(f'v2/works/{work}', model=types.Work)
     
-    def edit_homework_status(self, work: int | str, person: str | int = "me", change: dict[str, str] = {"action": "StartWorking"}):
+    def edit_homework_status(self, work: Union[int, str], person: Union[int, str] = "me", change: dict[str, str] = {"action": "StartWorking"}):
         """[POST] works/{work}/persons/{person}/status
 
         Изменить статус выполнения домашней работы учащимся.
@@ -1325,9 +1323,9 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/Works/Works_ChangeStatus
         """
         
-        return self.post(f'works/{work}/persons/{self.check_person(person)}/status', return_json=True, data=change)
+        return self.post(f'v2/works/{work}/persons/{self.check_person(person)}/status', return_json=True, data=change)
     
-    def get_school_work_types(self, school: str | int) -> list[types.WorkType]:
+    def get_school_work_types(self, school: Union[int, str]) -> list[types.WorkType]:
         """[GET] work-types/{school}
 
         Получение списка всех типов работ школы
@@ -1340,4 +1338,4 @@ class SchoolMosregRUAPI(BaseAPI):
         Docs: https://api.school.mosreg.ru/partners/swagger/ui/index#!/WorkTypes/WorkTypes_Get
         """
         
-        return self.get(f'work-types/{school}', model=types.WorkType, is_list=True)
+        return self.get(f'v2/work-types/{school}', model=types.WorkType, is_list=True)

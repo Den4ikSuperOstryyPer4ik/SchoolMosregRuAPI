@@ -1,14 +1,15 @@
 from .model import Type
+from typing import Optional
 
 class Children(Type):
     """[GET] /v2.0/user/{userID}/children \n~~~\nПолучение списка детей по идентификатору родительского пользователя\n~~~\nПрава доступа: EducationalInfo\n~~~\n"""
     
     id: int
     id_str: str
-    userId: int
-    userId_str: str
-    firstName: str | None = None
-    lastName: str | None = None
-    middleName: str | None = None
-    shortName: str | None = None
-    sex: str | None = None
+    userId: Optional[int] = None
+    userId_str: Optional[str] = None
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    middleName: Optional[str] = None
+    shortName: Optional[str] = None
+    sex: Optional[str] = None

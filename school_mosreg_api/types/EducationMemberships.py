@@ -1,4 +1,5 @@
 from .model import Type
+from typing import Optional
 
 
 class SchoolMemberships_school_school(Type):
@@ -61,6 +62,6 @@ class SchoolMemberships_school(Type):
 class SchoolMemberships(Type):
     """[GET]\n~~~\n/v2.0/users/{user}/school-memberships\n~~~\n/v2.0/users/{user}/education\n~~~\n/v2.0/users/me/school-memberships\n~~~\n/v2.0/persons/{person}/school-memberships\n~~~\nСписок участий в школах для того или иного пользователя\n~~~\nПрава доступа: EducationalInfo\n~~~\n"""
     
-    person: int | None = None
-    person_str: str | None = None
+    person: Optional[int] = None
+    person_str: Optional[str] = None
     schools: list[SchoolMemberships_school]

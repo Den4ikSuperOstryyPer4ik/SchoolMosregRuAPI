@@ -1,15 +1,17 @@
-from .model import Type
+from typing import Optional
 
 from .EduGroups import EduGroup
+from .model import Type
+
 
 class Context_Children(Type):
     personId: int
-    firstName: str
-    lastName: str
-    middleName: str
-    shortName: str
-    schoolIds: list[int]
-    groupIds: list[int]
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    middleName: Optional[str] = None
+    shortName: Optional[str] = None
+    schoolIds: list[Optional[int]] = []
+    groupIds: list[Optional[int]] = []
 
 
 class Context_school(Type):
@@ -22,17 +24,17 @@ class Context_school(Type):
 class Context(Type):
     """[GET] /v2.0/users/me/context | /v2.0/users/{userID}/context\n~~~\nПолучение контекстной информации по пользователю\n~~~\nПрава доступа: CommonInfo, FriendsAndRelatives, EducationalInfo\n~~~\n"""
     
-    userId: int
-    avatarUrl: str
-    roles: list[str]
-    children: list[Context_Children]
-    schools: list[Context_school]
-    eduGroups: list[EduGroup]
-    splitId: str
-    personId: int
-    firstName: str
-    lastName: str
-    middleName: str
-    shortName: str
-    schoolIds: list[int]
-    groupIds: list[int]
+    userId: Optional[int] = None
+    avatarUrl: Optional[str] = None
+    roles: list[Optional[str]] = []
+    children: list[Optional[Context_Children]] = []
+    schools: list[Optional[Context_school]] = []
+    eduGroups: list[Optional[EduGroup]] = []
+    splitId: Optional[str] = None
+    personId: Optional[int] = None
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    middleName: Optional[str] = None
+    shortName: Optional[str] = None
+    schoolIds: list[Optional[int]] = []
+    groupIds: list[Optional[int]] = []
